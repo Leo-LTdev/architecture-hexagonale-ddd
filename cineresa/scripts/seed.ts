@@ -15,6 +15,6 @@ const db = {
   ],
 };
 
-fs.mkdirSync(path.join(__dirname, "..", "data"), { recursive: true });
-fs.writeFileSync(path.join(__dirname, "..", "data", "db.json"), JSON.stringify(db, null, 2));
+fs.mkdirSync(path.join(__dirname, "..",  "src", "data"), { recursive: true });
+fs.writeFileSync(path.join(__dirname, "..", "src", "data", "db.json"), JSON.stringify(db, null, 2));
 console.log("data/db.json régénéré");

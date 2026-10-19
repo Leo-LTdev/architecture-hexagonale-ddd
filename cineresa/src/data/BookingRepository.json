@@ -1,0 +1,14 @@
+{
+  "bookings": [
+    {
+      "id": "b1",
+      "screeningId": "s3",
+      "email": "alice@example.com",
+      "seats": 6,
+      "tariff": "NORMAL",
+      "total": 4860,
+      "status": "CONFIRMED",
+      "createdAt": "2026-10-19T09:32:54.069Z"
+    }
+  ]
+}

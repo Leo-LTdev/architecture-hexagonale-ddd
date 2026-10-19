@@ -16,15 +16,16 @@ Retour DB | Lecture de la base de donnée |  |
 
 ## SMEELS
 
+- Non respect des couches, retour http, logique métier et appel DB dans le même fichier.
 - Nom DB écris dans une chaine de caractère dans le code ainsi que son path => Si le nom de la DB ou que le path change aucune donnée sera remonté.
 - Pas de try catch sur les ouvertures de fichiers (erreurs, path indisponible, etc.) aucune erreur en remonte car aucune gestion d'erreur
-- Les status et types sont éctris en brut plusieurs fois, il faut passer par un enums pour avoir le même nom de partout.
+- Les status et types sont écris en brut plusieurs fois, il faut passer par un enums pour avoir le même nom de partout.
 - Format de date qui n'est pas normalisé, si un PC est en UTC+2 et l'autres +4 les dates ne seront pas les mêmes, utiliser un format universel tout le temps (input et output).
-- La fonction de resa est trop longue et les calculs en brut dedans ne son pas bon. La vérification des inputs users peuvent-être divisé en une seul vérification dans une autre fonction.
+- La fonction de resa est trop longue et les calculs en brut dedans ne sont pas bon. La vérification des inputs users peuvent-être divisé en une seul vérification dans une autre fonction.
 
 ## Erreur SOLID
 
-### Signle responsability principle
+### Signe responsability principle
 
 - La fonction `/screenings/:id/bookings` gères plusieurs responsabilités
 
@@ -55,3 +56,11 @@ Tout est typé en `any` aucun héritage et interface sont utilisés dans le proj
 
 Aucune interface, seul DB est un objects entier
 Les données renvoyées ne sont pas filtrés, on retourne toutes les informations et exposes toutes les données (`readDb()` par exemple)
+
+### Dependency Inversion Principle
+
+Les dépendances ne passe pas par de l'abstraction (interface), donc c'est mauvais.
+
+### Dépendances test unitaires
+
+Il faut respecter le Dependency Inversion Principle pour le remplacer dans un test sans modifier le code. Les dépendances non-abstraites ont elle mêmes des dépendances, ce qui bloqueras tout le test.

@@ -1,37 +1,39 @@
-import utilsDB from "../utils/utilitaireDB";
-import app from "../server";
+import BookingRepository from "../data/BookingRepository";
+import ScreeningRepository from "../data/ScreeningRepository";
+import Utils from "../utils/Utils";
+import { ScreeningInterface } from "../interfaces/Interfaces";
+import { BookingStatus, Screening } from "../models/types/types";
 
-class ScreeningService {
-  private utils: utilsDB;
+class ScreeningService implements ScreeningInterface {
 
-  public constructor(utils: utilsDB) {
+  private utils: Utils;
+
+  public constructor(utils: Utils) {
     this.utils = utils;
   }
 
-  public GetScreenings(): any {
+  public GetScreenings(): Screening[] {
     // ---------------------------------------------------------------------------
     // GET /screenings : liste des séances à venir avec le nombre de places restantes
     // ---------------------------------------------------------------------------
-    const db = this.utils.readDb();
+    const bookingRepository = new BookingRepository(this.utils);
+    const screeningRepository = new ScreeningRepository(this.utils);
+
     const now = new Date();
-    const result = [];
-    for (const s of db.screenings) {
-      if (new Date(s.startsAt) < now) continue;
-      let taken = 0;
-      for (const b of db.bookings) {
-        if (b.screeningId === s.id && b.status === "CONFIRMED")
-          taken += b.seats;
-      }
-      result.push({
-        id: s.id,
-        movie: s.movie,
-        room: s.room,
-        startsAt: s.startsAt,
-        price: s.price,
-        remaining: s.capacity - taken,
-      });
-    }
-    return result
+    const bookings = bookingRepository.ReadDb();
+
+    //Get upcoming screenings
+    const screenings = screeningRepository.ReadDb().filter((s) => new Date(s.startsAt) >= now);
+
+    return screenings.map((s) => {
+      //Get bookings for this screening and status confirmed
+      const taken = bookings
+        .filter((b) => b.screeningId == s.id && b.status == BookingStatus.CONFIRMED)
+        .reduce((sum, b) => sum + b.seats, 0);
+
+      s.remaining = s.capacity - taken;
+      return s;
+    });
   }
 }
 

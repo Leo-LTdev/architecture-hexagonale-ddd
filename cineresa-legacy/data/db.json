@@ -35,6 +35,16 @@
       "total": 4860,
       "status": "CONFIRMED",
       "createdAt": "2026-10-19T08:28:03.003Z"
+    },
+    {
+      "id": "b1792435696912",
+      "screeningId": "s1",
+      "email": "a@b.fr",
+      "seats": 2,
+      "tariff": "NORMAL",
+      "total": 2300,
+      "status": "CONFIRMED",
+      "createdAt": "2026-10-19T18:48:16.912Z"
     }
   ]
 }

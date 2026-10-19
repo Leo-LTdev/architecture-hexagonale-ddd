@@ -1,94 +1,127 @@
-import utilsDB from "../utils/utilitaireDB";
-import app from "../server";
 import HTTPException from "../utils/HTTPException";
+import BookingRepository from "../data/BookingRepository";
+import ScreeningRepository from "../data/ScreeningRepository";
+import Utils from "../utils/Utils";
+import { BookingInterface } from "../interfaces/Interfaces";
+import { Booking, TarifPolicy, TarifRules, BookingStatus, Screening, User } from "../models/types/types";
+import BookingDto from "../models/objects/BookingDto";
+import BookingDetailsDto from "../models/objects/BookingDetailsDto";
 
-class BookingService {
-  private utils: utilsDB;
+class BookingService implements BookingInterface {
 
-  public constructor(utils: utilsDB) {
+  private utils: Utils;
+
+  public constructor(utils: Utils) {
     this.utils = utils;
   }
 
-  public BookByIdUser(data: any): any {
+  public BookByIdUser(screeningData: Screening, data: BookingDto): Booking {
     // ---------------------------------------------------------------------------
     // POST /screenings/:id/bookings : réserver des places
-    // body : { email, seats, tariff: "NORMAL" | "STUDENT" }
+    // body : { email, seats, tariff: "NORMAL" | "STUDENT" | "SENIOR" | "CHILD" }
     // ---------------------------------------------------------------------------
+    const bookingRepository = new BookingRepository(this.utils);
+    const screeningRepository = new ScreeningRepository(this.utils);
 
-    const db = this.utils.readDb();
-    const s = db.screenings.find((x: any) => x.id === data.params.id);
-    if (!s) throw new HTTPException("Séance introuvable", { cause: 404 });
+    //Get screening by id
+    const screening = screeningRepository.ReadDb().find((s) => s.id == screeningData.id);
 
-    const email = data.body.email;
+    if (!screening) throw new HTTPException("Séance introuvable", { cause: 404 });
+
+    const email = data.email;
     if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
       throw new HTTPException("Email invalide", { cause: 400 });
     }
 
-    const seats = Number(data.body.seats);
+    const seats = Number(data.seats);
     if (!Number.isInteger(seats) || seats < 1 || seats > 6) {
       throw new HTTPException("Entre 1 et 6 places par réservation", {
         cause: 400,
       });
     }
 
-    if (new Date(s.startsAt) <= new Date()) {
+    if (new Date(screening.startsAt) <= new Date()) {
       throw new HTTPException("La séance a déjà commencé", { cause: 409 });
     }
 
-    // calcul des places restantes (oui, c'est le même code que plus haut)
-    let taken = 0;
-    for (const b of db.bookings) {
-      if (b.screeningId === s.id && b.status === "CONFIRMED") taken += b.seats;
-    }
-    if (taken + seats > s.capacity) {
-      throw new HTTPException("Plus assez de places", { cause: 409 });
-    }
+    const bookings = bookingRepository.ReadDb();
+
+    //Get bookings for this screening and status confirmed
+    const taken = bookings
+      .filter((b) => b.screeningId == screening.id && b.status == BookingStatus.CONFIRMED)
+      .reduce((sum, b) => sum + b.seats, 0);
+
+    if (taken + seats > screening.capacity) throw new HTTPException("Plus assez de places", { cause: 409 });
 
     // calcul du prix (en centimes)
-    let unit = s.price;
-    if (data.body.tariff === "STUDENT") unit = Math.round(unit * 0.7);
+    const tariff = Object.values(TarifPolicy).includes(data.tariff) ? data.tariff : TarifPolicy.NORMAL;
+    let unit = screening.price;
+
+    switch (tariff) {
+      case TarifPolicy.CHILD:
+        unit = Math.round(unit * TarifRules.CHILD);
+        break;
+      case TarifPolicy.STUDENT:
+        unit = Math.round(unit * TarifRules.STUDENT);
+        break;
+      case TarifPolicy.SENIOR:
+        unit = Math.round(unit * TarifRules.SENIOR);
+        break;
+      default:
+        unit = Math.round(unit * TarifRules.NORMAL);
+    }
+
     let total = unit * seats;
-    if (seats >= 4) total = Math.round(total * 0.9);
+    if (seats >= 4) total = Math.round(total * TarifRules.UPFOR);
 
     // paiement : appel au prestataire (simulé)
     const paid = Math.random() > 0.05;
     if (!paid) throw new HTTPException("Paiement refusé", { cause: 402 });
 
-    const booking = {
-      id: "b" + Date.now(),
-      screeningId: s.id,
-      email: email,
-      seats: seats,
-      tariff: data.body.tariff === "STUDENT" ? "STUDENT" : "NORMAL",
-      total: total,
-      status: "CONFIRMED",
-      createdAt: new Date().toISOString(),
-    };
-    db.bookings.push(booking);
-    this.utils.writeDb(db);
+    const booking = new Booking(
+      "b" + Date.now(),
+      screening.id,
+      email,
+      seats,
+      tariff,
+      total,
+      BookingStatus.CONFIRMED,
+      new Date().toISOString(),
+    );
+
+    bookings.push(booking);
+    bookingRepository.WriteDb(bookings);
 
     // envoi du mail de confirmation
     console.log(
-      `[SMTP] To: ${email} — Votre réservation ${booking.id} pour "${s.movie}" ` +
+      `[SMTP] To: ${email} — Votre réservation ${booking.id} pour "${screening.movie}" ` +
         `(${seats} place(s), ${(total / 100).toFixed(2)} €) est confirmée.`,
     );
 
     return booking;
   }
 
-  public DeleteBooking(data: any): any {
+  public DeleteBooking(bookingData: Booking): Booking {
     // ---------------------------------------------------------------------------
     // DELETE /bookings/:id : annuler (possible jusqu'à 2h avant la séance)
     // ---------------------------------------------------------------------------
+    const bookingRepository = new BookingRepository(this.utils);
+    const screeningRepository = new ScreeningRepository(this.utils);
 
-    const db = this.utils.readDb();
-    const b = db.bookings.find((x: any) => x.id === data.params.id);
-    if (!b) throw new HTTPException("Réservation introuvable", { cause: 404 });
-    if (b.status === "CANCELLED")
-      throw new HTTPException("Déjà annulée", { cause: 409 });
+    const bookings = bookingRepository.ReadDb();
 
-    const s = db.screenings.find((x: any) => x.id === b.screeningId);
-    const diff = new Date(s.startsAt).getTime() - new Date().getTime();
+    //Get booking by id
+    const booking = bookings.find((b) => b.id == bookingData.id);
+
+    if (!booking) throw new HTTPException("Réservation introuvable", { cause: 404 });
+    if (booking.status == BookingStatus.CANCELLED) throw new HTTPException("Déjà annulée", { cause: 409 });
+
+    //Get screening of this booking
+    const screening = screeningRepository.ReadDb().find((s) => s.id == booking.screeningId);
+
+    if (!screening) throw new HTTPException("Séance introuvable", { cause: 404 });
+
+    const diff = new Date(screening.startsAt).getTime() - new Date().getTime();
     if (diff < 2 * 60 * 60 * 1000) {
       throw new HTTPException(
         "Annulation impossible moins de 2h avant la séance",
@@ -96,31 +129,36 @@ class BookingService {
       );
     }
 
-    b.status = "CANCELLED";
-    b.cancelledAt = new Date().toISOString();
-    this.utils.writeDb(db);
+    booking.status = BookingStatus.CANCELLED;
+    booking.cancelledAt = new Date().toISOString();
+    bookingRepository.WriteDb(bookings);
 
     console.log(
-      `[SMTP] To: ${b.email} — Votre réservation ${b.id} a été annulée. Remboursement : ${(b.total / 100).toFixed(2)} €`,
+      `[SMTP] To: ${booking.email} — Votre réservation ${booking.id} a été annulée. Remboursement : ${(booking.total / 100).toFixed(2)} €`,
     );
-    return b;
+
+    return booking;
   }
 
-  public BookingsByIdUser(data: any): any {
+  public BookingsByIdUser(userData: User): BookingDetailsDto[] {
     // ---------------------------------------------------------------------------
     // GET /bookings?email=... : mes réservations
     // ---------------------------------------------------------------------------
+    const bookingRepository = new BookingRepository(this.utils);
+    const screeningRepository = new ScreeningRepository(this.utils);
 
-    const db = this.utils.readDb();
-    const list = db.bookings.filter((b: any) => b.email === data.query.email);
+    const screenings = screeningRepository.ReadDb();
 
-    return list.map((b: any) => {
-      const s = db.screenings.find((x: any) => x.id === b.screeningId);
-      return {
-        ...b,
-        movie: s ? s.movie : "?",
-        startsAt: s ? s.startsAt : null,
-      };
+    //Get bookings of this user
+    const bookings = bookingRepository.ReadDb().filter((b) => b.email == userData.email);
+
+    return bookings.map((b) => {
+      const screening = screenings.find((s) => s.id == b.screeningId);
+      return new BookingDetailsDto(
+        b,
+        screening ? screening.movie : "?",
+        screening ? screening.startsAt : null,
+      );
     });
   }
 }

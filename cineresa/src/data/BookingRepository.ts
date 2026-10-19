@@ -1,11 +1,10 @@
-import Utils from '../utils/Utils';
 import {Booking} from '../models/types/types'
-import { RepositoryInterface } from '../interfaces/Interfaces';
+import { BookingRepositoryInterface, UtilsInterface } from '../interfaces/Interfaces';
 
-class BookingRepository implements RepositoryInterface {
-    private utils: Utils;
+class BookingRepository implements BookingRepositoryInterface {
+    private utils: UtilsInterface;
 
-    public constructor(utils: Utils) {
+    public constructor(utils: UtilsInterface) {
         this.utils = utils;
     }
 

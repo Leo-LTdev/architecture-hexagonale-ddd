@@ -1,4 +1,4 @@
-import { Screening } from "../models/types/types";
+import { Screening } from "../../models/types/types";
 
 interface ScreeningInterface{
     GetScreenings(): Screening[];

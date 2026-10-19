@@ -1,4 +1,5 @@
-class HTTPException extends Error {
+import { HTTPExceptionInterface } from "../interfaces/Interfaces";
+class HTTPException extends Error implements HTTPExceptionInterface {
   override cause: number;
 
   constructor(message: string, options: { cause: number }) {

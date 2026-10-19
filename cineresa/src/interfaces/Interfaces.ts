@@ -1,5 +1,8 @@
-import BookingInterface from "./BookingInterface";
-import ScreeningInterface from "./ScreeningInterface";
-import RepositoryInterface from "./RepositoryInterface";
+import BookingServiceInterface from "./Service/BookingServiceInterface";
+import ScreeningServiceInterface from "./Service/ScreeningServiceInterface";
+import HTTPExceptionInterface from "./HTTPExceptionInterface";
+import UtilsInterface from "./UtilsInterface";
+import BookingRepositoryInterface from "./Repository/BookingRepositoryInterface";
+import ScreeningRepositoryInterface from "./Repository/ScreeningRepositoryInterface";
 
-export { BookingInterface, ScreeningInterface, RepositoryInterface };
+export { BookingServiceInterface, ScreeningServiceInterface, BookingRepositoryInterface, ScreeningRepositoryInterface, HTTPExceptionInterface, UtilsInterface };

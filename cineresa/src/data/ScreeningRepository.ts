@@ -1,9 +1,8 @@
-import RepositoryInterface from '../interfaces/RepositoryInterface';
+import { ScreeningRepositoryInterface, UtilsInterface } from '../interfaces/Interfaces';
 import { Screening } from '../models/types/types';
-import Utils from '../utils/Utils';
-class ScreeningRepository implements RepositoryInterface {
-    private utils: Utils;
-    public constructor(utils: Utils){
+class ScreeningRepository implements ScreeningRepositoryInterface {
+    private utils: UtilsInterface;
+    public constructor(utils: UtilsInterface){
         this.utils = utils;
     }
 

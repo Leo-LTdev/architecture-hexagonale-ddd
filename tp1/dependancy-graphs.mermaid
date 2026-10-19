@@ -1,0 +1,126 @@
+flowchart LR
+    Client["Client HTTP"]
+    Route["POST /screenings/:id/bookings"]
+    Express["Express"]
+    JsonMiddleware["express.json"]
+    Request["req.params et req.body"]
+    Response["res"]
+
+    ReadDb["readDb"]
+    DbFile["data/db.json"]
+    FileSystem["fs.readFileSync"]
+    ScreeningLookup["Recherche de la séance"]
+    Screening["Screening"]
+
+    EmailValidation["Validation de l'email"]
+    SeatsValidation["Validation du nombre de places"]
+    DateValidation["Vérification de la date de séance"]
+    CapacityCalculation["Calcul des places réservées"]
+    CapacityRule["Règle de capacité"]
+    Pricing["Calcul du prix"]
+    StudentDiscount["Réduction étudiant"]
+    GroupDiscount["Réduction groupe"]
+    Payment["Paiement simulé"]
+    BookingCreation["Création de la réservation"]
+    BookingsCollection["db.bookings"]
+    WriteDb["writeDb"]
+    FileWrite["fs.writeFileSync"]
+    ConfirmationLog["Log de confirmation SMTP simulé"]
+    BookingResponse["Réponse HTTP 201"]
+    Error404["Réponse HTTP 404"]
+    Error400["Réponse HTTP 400"]
+    Error409["Réponse HTTP 409"]
+    Error402["Réponse HTTP 402"]
+
+    subgraph Infrastructure["Infrastructure"]
+        Express
+        JsonMiddleware
+        FileSystem
+        FileWrite
+        DbFile
+        ConfirmationLog
+    end
+
+    subgraph Validation["Validation des entrées"]
+        EmailValidation
+        SeatsValidation
+        DateValidation
+    end
+
+    subgraph BusinessRules["Règles métier"]
+        CapacityCalculation
+        CapacityRule
+        Pricing
+        StudentDiscount
+        GroupDiscount
+        Payment
+    end
+
+    subgraph Persistence["Persistance"]
+        ReadDb
+        ScreeningLookup
+        Screening
+        BookingsCollection
+        BookingCreation
+        WriteDb
+    end
+
+    Client -->|"envoie une requête"| Express
+    Express -->|"utilise"| JsonMiddleware
+    JsonMiddleware -->|"alimente"| Request
+    Express -->|"dispatch"| Route
+    Route -->|"lit"| Request
+
+    Route -->|"charge les données"| ReadDb
+    ReadDb -->|"lit"| FileSystem
+    FileSystem -->|"accède à"| DbFile
+    ReadDb -->|"retourne"| ScreeningLookup
+    ScreeningLookup -->|"recherche par identifiant"| Screening
+
+    Route -->|"valide"| EmailValidation
+    Request -->|"email"| EmailValidation
+    Route -->|"valide"| SeatsValidation
+    Request -->|"seats"| SeatsValidation
+    Route -->|"vérifie"| DateValidation
+    Screening -->|"startsAt"| DateValidation
+
+    ScreeningLookup -->|"séance absente"| Error404
+    EmailValidation -->|"entrée invalide"| Error400
+    SeatsValidation -->|"entrée invalide"| Error400
+    DateValidation -->|"séance commencée"| Error409
+
+    Screening -->|"capacity"| CapacityCalculation
+    BookingsCollection -->|"réservations confirmées"| CapacityCalculation
+    Request -->|"seats"| CapacityCalculation
+    CapacityCalculation -->|"compare"| CapacityRule
+    CapacityRule -->|"capacité dépassée"| Error409
+
+    Screening -->|"price"| Pricing
+    Request -->|"tariff"| StudentDiscount
+    Pricing -->|"prix unitaire"| StudentDiscount
+    StudentDiscount -->|"applique 30 pour cent"| Pricing
+    Request -->|"seats"| GroupDiscount
+    Pricing -->|"prix total"| GroupDiscount
+    GroupDiscount -->|"applique 10 pour cent à partir de 4 places"| Pricing
+
+    Pricing -->|"montant final"| Payment
+    Payment -->|"paiement refusé"| Error402
+    Payment -->|"paiement accepté"| BookingCreation
+
+    Screening -->|"id"| BookingCreation
+    Request -->|"email et seats"| BookingCreation
+    Pricing -->|"total"| BookingCreation
+    BookingCreation -->|"ajoute"| BookingsCollection
+
+    BookingsCollection -->|"données modifiées"| WriteDb
+    WriteDb -->|"écrit"| FileWrite
+    FileWrite -->|"persiste dans"| DbFile
+
+    BookingCreation -->|"booking confirmé"| ConfirmationLog
+    BookingCreation -->|"booking"| BookingResponse
+
+    Error404 -->|"retour"| Response
+    Error400 -->|"retour"| Response
+    Error409 -->|"retour"| Response
+    Error402 -->|"retour"| Response
+    BookingResponse -->|"retour"| Response

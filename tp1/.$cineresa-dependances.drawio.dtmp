@@ -1,0 +1,618 @@
+<mxfile host="Electron" pages="3">
+  <diagram id="p1" name="1 - Legacy : fichiers &amp; blocs">
+    <mxGraphModel dx="1829" dy="1762" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" background="light-dark(#ffffff, #121212)" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="p1-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;strokeColor=none;fillColor=none;align=left;fontSize=15;" value="&lt;b&gt;CinéResa legacy — graphe de dépendances&lt;/b&gt;&lt;br&gt;Flèche A → B : « A dépend de B ». Un bloc dessiné &lt;i&gt;dans&lt;/i&gt; un autre en dépend aussi (ex. les routes utilisent &lt;i&gt;app&lt;/i&gt;)." vertex="1">
+          <mxGeometry height="45" width="1100" x="40" y="-70" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;b&gt;npm start / npm run dev&lt;/b&gt;&lt;br&gt;tsx [watch] src/server.ts" vertex="1">
+          <mxGeometry height="50" width="240" x="180" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;b&gt;npm test&lt;/b&gt; — vitest&lt;br&gt;&lt;i&gt;aucun test aujourd&#39;hui&lt;/i&gt;" vertex="1">
+          <mxGeometry height="50" width="220" x="660" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;b&gt;npm run seed&lt;/b&gt;&lt;br&gt;tsx scripts/seed.ts" vertex="1">
+          <mxGeometry height="50" width="240" x="1130" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-5" parent="1" style="swimlane;html=1;startSize=30;rounded=1;fontStyle=1;fontSize=13;fillColor=#fafafa;strokeColor=#333333;" value="src/server.ts  — 151 lignes, toute l&#39;application" vertex="1">
+          <mxGeometry height="520" width="1010" x="40" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-6" parent="p1-5" style="swimlane;html=1;startSize=30;rounded=1;fontStyle=1;fontSize=13;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="const app = express()  ·  app.use(express.json())   (l.7-8)" vertex="1">
+          <mxGeometry height="230" width="960" x="20" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-7" parent="p1-6" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;export default app&lt;/b&gt; (l.151)" vertex="1">
+          <mxGeometry height="45" width="330" x="15" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-8" parent="p1-6" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;" value="&lt;b&gt;app.listen(PORT)&lt;/b&gt; (l.146-149) — si require.main === module" vertex="1">
+          <mxGeometry height="45" width="565" x="380" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-9" parent="p1-6" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;GET /screenings&lt;/b&gt; (l.23-43)&lt;br&gt;séances à venir&lt;br&gt;&lt;font color=&#39;#b85450&#39;&gt;⚠ calcul places prises dupliqué&lt;/font&gt;" vertex="1">
+          <mxGeometry height="100" width="220" x="15" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-10" parent="p1-6" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;GET /bookings?email=&lt;/b&gt; (l.135-144)&lt;br&gt;jointure booking ↔ screening" vertex="1">
+          <mxGeometry height="100" width="220" x="250" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-11" parent="p1-6" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;POST /screenings/:id/bookings&lt;/b&gt;&lt;br&gt;(l.49-107) email, 1..6 places,&lt;br&gt;séance commencée, &lt;font color=&#39;#b85450&#39;&gt;⚠ capacité dupliquée&lt;/font&gt;,&lt;br&gt;prix, paiement, mail" vertex="1">
+          <mxGeometry height="100" width="220" x="485" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-12" parent="p1-6" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;DELETE /bookings/:id&lt;/b&gt; (l.112-130)&lt;br&gt;règle des 2h, annulation, mail" vertex="1">
+          <mxGeometry height="100" width="220" x="720" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-13" parent="p1-5" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;" value="&lt;b&gt;readDb(): any&lt;/b&gt; (l.12-14)&lt;br&gt;fs.readFileSync + JSON.parse" vertex="1">
+          <mxGeometry height="60" width="695" x="15" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-14" parent="p1-5" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;" value="&lt;b&gt;writeDb(db)&lt;/b&gt; (l.16-18)&lt;br&gt;fs.writeFileSync" vertex="1">
+          <mxGeometry height="60" width="200" x="760" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-15" parent="p1-5" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;" value="&lt;b&gt;DB_FILE&lt;/b&gt; (l.10) = path.join(__dirname, &#39;..&#39;, &#39;data&#39;, &#39;db.json&#39;)" vertex="1">
+          <mxGeometry height="45" width="700" x="220" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-16" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fontSize=12;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;b&gt;data/db.json&lt;/b&gt;&lt;br&gt;{ screenings[], bookings[] }" vertex="1">
+          <mxGeometry height="100" width="180" x="540" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-17" parent="1" style="swimlane;html=1;startSize=30;rounded=1;fontStyle=1;fontSize=13;fillColor=#fafafa;strokeColor=#333333;" value="scripts/seed.ts  — 20 lignes" vertex="1">
+          <mxGeometry height="520" width="300" x="1100" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-18" parent="p1-17" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;" value="&lt;b&gt;mkdirSync + writeFileSync&lt;/b&gt;&lt;br&gt;(l.18-19) + console.log" vertex="1">
+          <mxGeometry height="60" width="240" x="30" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-19" parent="p1-17" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;" value="&lt;b&gt;const db&lt;/b&gt; (l.7-16)&lt;br&gt;s1..s3 + booking b1&lt;br&gt;&lt;font color=&#39;#b85450&#39;&gt;⚠ schéma JSON recopié,&lt;br&gt;aucun type partagé avec server.ts&lt;/font&gt;" vertex="1">
+          <mxGeometry height="90" width="240" x="30" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-20" parent="p1-17" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;" value="&lt;b&gt;inHours(h)&lt;/b&gt; (l.5)&lt;br&gt;Date.now() + h × 3600_000" vertex="1">
+          <mxGeometry height="60" width="240" x="30" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-21" edge="1" parent="1" source="p1-2" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p1-5" value="exécute">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-22" edge="1" parent="1" source="p1-3" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;dashed=1;" target="p1-5" value="importerait app (supertest)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-23" edge="1" parent="1" source="p1-4" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p1-17" value="exécute">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-24" edge="1" parent="1" source="p1-9" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.18705035971223022;entryY=0;entryDx=0;entryDy=0;" target="p1-13" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-25" edge="1" parent="1" source="p1-10" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5251798561151079;entryY=0;entryDx=0;entryDy=0;" target="p1-13" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-26" edge="1" parent="1" source="p1-11" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.3;exitY=1;exitDx=0;exitDy=0;entryX=0.8;entryY=0;entryDx=0;entryDy=0;" target="p1-13" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-27" edge="1" parent="1" source="p1-11" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.95;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.3333333333333333;entryDx=0;entryDy=0;" target="p1-14" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="754" y="440" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p1-28" edge="1" parent="1" source="p1-12" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.7;exitY=1;exitDx=0;exitDy=0;entryX=0.67;entryY=0;entryDx=0;entryDy=0;" target="p1-14" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-29" edge="1" parent="1" source="p1-12" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.1;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.6666666666666666;entryDx=0;entryDy=0;" target="p1-13" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="802" y="460" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p1-30" edge="1" parent="1" source="p1-13" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.1742857142857143;entryY=0;entryDx=0;entryDy=0;" target="p1-15" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-31" edge="1" parent="1" source="p1-14" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.8857142857142857;entryY=0;entryDx=0;entryDy=0;" target="p1-15" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-32" edge="1" parent="1" source="p1-15" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p1-16" value="lu / réécrit en entier (fs synchrone)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-33" edge="1" parent="1" source="p1-18" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p1-19" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-34" edge="1" parent="1" source="p1-19" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p1-20" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-35" edge="1" parent="1" source="p1-18" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d79b00;strokeWidth=2;" target="p1-16" value="écrase">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1385" y="200" />
+              <mxPoint x="1385" y="740" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p1-138" parent="1" style="swimlane;html=1;startSize=30;rounded=1;fontStyle=1;fontSize=13;fillColor=#ffffff;" value="Légende" vertex="1">
+          <mxGeometry height="278" width="300" x="1460" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-139" parent="p1-138" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Présentation (HTTP)" vertex="1">
+          <mxGeometry height="26" width="280" x="10" y="38" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-140" parent="p1-138" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;" value="Règle métier" vertex="1">
+          <mxGeometry height="26" width="280" x="10" y="72" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-141" parent="p1-138" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Accès aux données" vertex="1">
+          <mxGeometry height="26" width="280" x="10" y="106" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-142" parent="p1-138" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Infrastructure (temps, hasard, mail, paiement)" vertex="1">
+          <mxGeometry height="26" width="280" x="10" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-143" parent="p1-138" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" value="Lib / module externe" vertex="1">
+          <mxGeometry height="26" width="280" x="10" y="174" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-144" parent="p1-138" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#fff2cc;strokeColor=#d6b656;" value="Config / fichier" vertex="1">
+          <mxGeometry height="26" width="280" x="10" y="208" as="geometry" />
+        </mxCell>
+        <mxCell id="p1-145" parent="p1-138" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;" value="Problème / non injectable" vertex="1">
+          <mxGeometry height="26" width="280" x="10" y="242" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="p2" name="2 - Zoom POST /screenings/:id/bookings">
+    <mxGraphModel dx="2087" dy="1370" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="p2-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;strokeColor=none;fillColor=none;align=left;fontSize=16;" value="&lt;b&gt;Dépendances de POST /screenings/:id/bookings&lt;/b&gt; (server.ts l.49-107)" vertex="1">
+          <mxGeometry height="40" width="800" x="40" y="-60" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;strokeWidth=2;" value="&lt;b&gt;POST /screenings/:id/bookings&lt;/b&gt;&lt;br&gt;handler async (req, res)" vertex="1">
+          <mxGeometry height="70" width="260" x="620" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-3" parent="1" style="swimlane;html=1;startSize=30;rounded=1;fontStyle=1;fontSize=13;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Présentation — HTTP" vertex="1">
+          <mxGeometry height="330" width="420" x="40" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-4" parent="p2-3" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;req.params.id&lt;/b&gt; → recherche de la séance" vertex="1">
+          <mxGeometry height="45" width="380" x="20" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-5" parent="p2-3" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;req.body.email / seats / tariff&lt;/b&gt; (body JSON non typé)" vertex="1">
+          <mxGeometry height="45" width="380" x="20" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-6" parent="p2-3" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;express.json()&lt;/b&gt; — parsing du body" vertex="1">
+          <mxGeometry height="45" width="380" x="20" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-7" parent="p2-3" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;res.status(404 | 400 | 409 | 402).json({ error })&lt;/b&gt;&lt;br&gt;codes HTTP mélangés aux règles" vertex="1">
+          <mxGeometry height="45" width="380" x="20" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-8" parent="p2-3" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;res.status(201).json(booking)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="45" width="380" x="20" y="265" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-9" parent="1" style="swimlane;html=1;startSize=30;rounded=1;fontStyle=1;fontSize=13;fillColor=#d5e8d4;strokeColor=#82b366;" value="Règles métier (inline)" vertex="1">
+          <mxGeometry height="420" width="420" x="40" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-10" parent="p2-9" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;b&gt;Séance existe&lt;/b&gt; (sinon 404)" vertex="1">
+          <mxGeometry height="52" width="380" x="20" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-11" parent="p2-9" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;b&gt;Email valide&lt;/b&gt; : regex ^[^@\s]+@[^@\s]+\.[^@\s]+$ (400)" vertex="1">
+          <mxGeometry height="52" width="380" x="20" y="107" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-12" parent="p2-9" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;b&gt;1 ≤ seats ≤ 6&lt;/b&gt;, entier (400)" vertex="1">
+          <mxGeometry height="52" width="380" x="20" y="169" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-13" parent="p2-9" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;b&gt;Séance non commencée&lt;/b&gt; : startsAt &amp;gt; now (409)" vertex="1">
+          <mxGeometry height="52" width="380" x="20" y="231" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-14" parent="p2-9" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;b&gt;Capacité&lt;/b&gt; : places prises + seats ≤ capacity (409)&lt;br&gt;&lt;i&gt;code dupliqué avec GET /screenings&lt;/i&gt;" vertex="1">
+          <mxGeometry height="52" width="380" x="20" y="293" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-15" parent="p2-9" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;b&gt;Prix&lt;/b&gt; : STUDENT ×0.7 (arrondi), ≥ 4 places ×0.9 (arrondi)" vertex="1">
+          <mxGeometry height="52" width="380" x="20" y="355" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-16" parent="1" style="swimlane;html=1;startSize=30;rounded=1;fontStyle=1;fontSize=13;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Accès aux données" vertex="1">
+          <mxGeometry height="330" width="420" x="1040" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-17" parent="p2-16" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;" value="&lt;b&gt;readDb()&lt;/b&gt; — lit tout le fichier" vertex="1">
+          <mxGeometry height="50" width="180" x="20" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-18" parent="p2-16" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;" value="&lt;b&gt;writeDb(db)&lt;/b&gt; — réécrit tout" vertex="1">
+          <mxGeometry height="50" width="180" x="220" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-19" parent="p2-16" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;" value="&lt;b&gt;DB_FILE&lt;/b&gt; = path.join(__dirname, …)" vertex="1">
+          <mxGeometry height="40" width="380" x="20" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-20" parent="p2-16" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" value="&lt;b&gt;fs&lt;/b&gt; readFileSync / writeFileSync&lt;br&gt;(disque, synchrone)" vertex="1">
+          <mxGeometry height="50" width="220" x="20" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-21" parent="p2-16" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" value="&lt;b&gt;path&lt;/b&gt;" vertex="1">
+          <mxGeometry height="50" width="140" x="260" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-22" parent="p2-16" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fontSize=12;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;b&gt;data/db.json&lt;/b&gt;" vertex="1">
+          <mxGeometry height="75" width="140" x="140" y="245" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-23" edge="1" parent="1" source="p2-17" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p2-19" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-24" edge="1" parent="1" source="p2-18" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p2-19" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-25" edge="1" parent="1" source="p2-17" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p2-20" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-26" edge="1" parent="1" source="p2-18" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p2-20" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-27" edge="1" parent="1" source="p2-19" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p2-21" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-28" edge="1" parent="1" source="p2-20" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p2-22" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-29" parent="1" style="swimlane;html=1;startSize=30;rounded=1;fontStyle=1;fontSize=13;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Infrastructure non déterministe" vertex="1">
+          <mxGeometry height="420" width="420" x="1040" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-30" parent="p2-29" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;" value="&lt;b&gt;Le temps&lt;/b&gt; : new Date()&lt;br&gt;l.64 (séance commencée), l.95 (createdAt)" vertex="1">
+          <mxGeometry height="55" width="380" x="20" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-31" parent="p2-29" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;" value="&lt;b&gt;Le temps&lt;/b&gt; : Date.now()&lt;br&gt;l.88 id = &quot;b&quot; + Date.now() (collision possible)" vertex="1">
+          <mxGeometry height="55" width="380" x="20" y="115" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-32" parent="p2-29" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;" value="&lt;b&gt;Le hasard&lt;/b&gt; : Math.random() &amp;gt; 0.05&lt;br&gt;l.84 paiement simulé (402)" vertex="1">
+          <mxGeometry height="55" width="380" x="20" y="185" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-33" parent="p2-29" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;" value="&lt;b&gt;La console&lt;/b&gt; : console.log [SMTP]&lt;br&gt;l.101 mail de confirmation" vertex="1">
+          <mxGeometry height="55" width="380" x="20" y="255" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-34" parent="p2-29" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;" value="&lt;b&gt;Mutation&lt;/b&gt; db.bookings.push(booking) puis writeDb" vertex="1">
+          <mxGeometry height="45" width="380" x="20" y="325" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-35" edge="1" parent="1" source="p2-2" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;strokeColor=#6c8ebf;" target="p2-4" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-36" edge="1" parent="1" source="p2-2" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;strokeColor=#6c8ebf;" target="p2-5" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-37" edge="1" parent="1" source="p2-2" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;strokeColor=#6c8ebf;" target="p2-6" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-38" edge="1" parent="1" source="p2-2" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;strokeColor=#6c8ebf;" target="p2-7" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-39" edge="1" parent="1" source="p2-2" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;strokeColor=#6c8ebf;" target="p2-8" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-40" edge="1" parent="1" source="p2-2" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;strokeColor=#82b366;" target="p2-10" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-41" edge="1" parent="1" source="p2-2" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;strokeColor=#82b366;" target="p2-11" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-42" edge="1" parent="1" source="p2-2" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;strokeColor=#82b366;" target="p2-12" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-43" edge="1" parent="1" source="p2-2" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;strokeColor=#82b366;" target="p2-13" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-44" edge="1" parent="1" source="p2-2" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;strokeColor=#82b366;" target="p2-14" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-45" edge="1" parent="1" source="p2-2" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;strokeColor=#82b366;" target="p2-15" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-46" edge="1" parent="1" source="p2-2" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;strokeColor=#d79b00;" target="p2-17" value="1. lecture">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-47" edge="1" parent="1" source="p2-2" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;strokeColor=#d79b00;" target="p2-18" value="7. persistance">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-48" edge="1" parent="1" source="p2-2" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;strokeColor=#9673a6;" target="p2-30" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-49" edge="1" parent="1" source="p2-2" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;strokeColor=#9673a6;" target="p2-31" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-50" edge="1" parent="1" source="p2-2" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;strokeColor=#9673a6;" target="p2-32" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-51" edge="1" parent="1" source="p2-2" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;strokeColor=#9673a6;" target="p2-33" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-52" edge="1" parent="1" source="p2-2" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;strokeColor=#9673a6;" target="p2-34" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-53" edge="1" parent="1" source="p2-13" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;dashed=1;strokeColor=#9673a6;" target="p2-30" value="now">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-54" parent="1" style="swimlane;html=1;startSize=30;rounded=1;fontStyle=1;fontSize=13;fillColor=#ffffff;" value="Remplaçable dans un test sans modifier le code ?" vertex="1">
+          <mxGeometry height="230" width="1420" x="40" y="890" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-55" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;" value="&lt;b&gt;Temps (new Date, Date.now)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="260" x="60" y="930" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-56" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;align=left;spacingLeft=8;fillColor=#ffffff;strokeColor=#999999;" value="Pas proprement : seulement en patchant le global (vi.useFakeTimers / vi.setSystemTime). Aucune horloge injectée." vertex="1">
+          <mxGeometry height="30" width="1110" x="330" y="930" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-57" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;" value="&lt;b&gt;Hasard (Math.random)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="260" x="60" y="966" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-58" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;align=left;spacingLeft=8;fillColor=#ffffff;strokeColor=#999999;" value="Pas proprement : seulement via vi.spyOn(Math, &#39;random&#39;). Sinon test non déterministe (échec 1/20)." vertex="1">
+          <mxGeometry height="30" width="1110" x="330" y="966" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-59" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;" value="&lt;b&gt;Console (mail SMTP)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="260" x="60" y="1002" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-60" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;align=left;spacingLeft=8;fillColor=#ffffff;strokeColor=#999999;" value="Observable via vi.spyOn(console, &#39;log&#39;), mais aucun Mailer remplaçable : impossible de vérifier un vrai envoi." vertex="1">
+          <mxGeometry height="30" width="1110" x="330" y="1002" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-61" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;" value="&lt;b&gt;Disque (fs, db.json)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="260" x="60" y="1038" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-62" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;align=left;spacingLeft=8;fillColor=#ffffff;strokeColor=#999999;" value="Non : chemin en dur (__dirname) → le test lit/écrit le vrai data/db.json (sauf vi.mock(&#39;fs&#39;))." vertex="1">
+          <mxGeometry height="30" width="1110" x="330" y="1038" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-63" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;b&gt;HTTP (req/res)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="260" x="60" y="1074" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-64" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;align=left;spacingLeft=8;fillColor=#ffffff;strokeColor=#999999;" value="Oui via supertest sur export default app — mais oblige à passer par HTTP pour tester une règle métier." vertex="1">
+          <mxGeometry height="30" width="1110" x="330" y="1074" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-65" parent="1" style="swimlane;html=1;startSize=30;rounded=1;fontStyle=1;fontSize=13;fillColor=#ffffff;" value="Légende" vertex="1">
+          <mxGeometry height="278" width="300" x="1520" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-66" parent="p2-65" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Présentation (HTTP)" vertex="1">
+          <mxGeometry height="26" width="280" x="10" y="38" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-67" parent="p2-65" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;" value="Règle métier" vertex="1">
+          <mxGeometry height="26" width="280" x="10" y="72" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-68" parent="p2-65" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Accès aux données" vertex="1">
+          <mxGeometry height="26" width="280" x="10" y="106" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-69" parent="p2-65" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Infrastructure (temps, hasard, mail, paiement)" vertex="1">
+          <mxGeometry height="26" width="280" x="10" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-70" parent="p2-65" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" value="Lib / module externe" vertex="1">
+          <mxGeometry height="26" width="280" x="10" y="174" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-71" parent="p2-65" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#fff2cc;strokeColor=#d6b656;" value="Config / fichier" vertex="1">
+          <mxGeometry height="26" width="280" x="10" y="208" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-72" parent="p2-65" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;" value="Problème / non testable" vertex="1">
+          <mxGeometry height="26" width="280" x="10" y="242" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="p3" name="3 - Cible : couches presentation → business → data">
+    <mxGraphModel dx="3929" dy="2040" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="p3-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;strokeColor=none;fillColor=none;align=left;fontSize=16;" value="&lt;b&gt;Plan d&#39;architecture cible (TP1)&lt;/b&gt; — dépendances uniquement vers le bas : presentation → business → data" vertex="1">
+          <mxGeometry height="40" width="1100" x="40" y="-40" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;" value="&lt;b&gt;src/server.ts&lt;/b&gt;&lt;br&gt;bootstrap : createApp() + app.listen(PORT)" vertex="1">
+          <mxGeometry height="55" width="320" x="530" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-3" parent="1" style="swimlane;html=1;startSize=30;rounded=1;fontStyle=1;fontSize=13;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="src/presentation  — HTTP uniquement (req, res, codes de statut)" vertex="1">
+          <mxGeometry height="280" width="1340" x="40" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-4" parent="p3-3" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;app.ts&lt;/b&gt;&lt;br&gt;createApp() : express(), express.json(),&lt;br&gt;monte les routes + errorHandler&lt;br&gt;&lt;i&gt;export default app (supertest)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="90" width="300" x="500" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-5" parent="p3-3" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;screeningRoutes.ts&lt;/b&gt;&lt;br&gt;GET /screenings&lt;br&gt;POST /screenings/:id/bookings" vertex="1">
+          <mxGeometry height="90" width="300" x="60" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-6" parent="p3-3" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;bookingRoutes.ts&lt;/b&gt;&lt;br&gt;DELETE /bookings/:id&lt;br&gt;GET /bookings?email=" vertex="1">
+          <mxGeometry height="90" width="300" x="480" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-7" parent="p3-3" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;errorHandler.ts&lt;/b&gt;&lt;br&gt;SEUL endroit qui traduit&lt;br&gt;erreur métier → 400 / 402 / 404 / 409" vertex="1">
+          <mxGeometry height="90" width="320" x="960" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-8" parent="1" style="swimlane;html=1;startSize=30;rounded=1;fontStyle=1;fontSize=13;fillColor=#d5e8d4;strokeColor=#82b366;" value="src/business  — règles métier, aucune notion HTTP" vertex="1">
+          <mxGeometry height="310" width="1340" x="40" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-9" parent="p3-8" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;b&gt;ScreeningService.ts&lt;/b&gt;&lt;br&gt;listUpcoming()&lt;br&gt;→ séances à venir + remaining&lt;br&gt;&lt;i&gt;new Date() en direct&lt;/i&gt;" vertex="1">
+          <mxGeometry height="90" width="280" x="60" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-10" parent="p3-8" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;b&gt;BookingService.ts&lt;/b&gt;&lt;br&gt;book(screeningId, email, seats, tariff)&lt;br&gt;cancel(bookingId) · listByEmail(email)&lt;br&gt;&lt;i&gt;new Date() / Date.now() en direct&lt;/i&gt;" vertex="1">
+          <mxGeometry height="100" width="400" x="420" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-11" parent="p3-8" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;b&gt;errors.ts&lt;/b&gt;&lt;br&gt;NotFoundError, ValidationError,&lt;br&gt;ConflictError, PaymentRefusedError" vertex="1">
+          <mxGeometry height="90" width="320" x="960" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-12" parent="p3-8" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;b&gt;seats.ts&lt;/b&gt;&lt;br&gt;countTakenSeats(bookings, id)&lt;br&gt;&lt;i&gt;unique (supprime la duplication)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="80" width="250" x="150" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-13" parent="p3-8" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;b&gt;pricing.ts&lt;/b&gt; (pure)&lt;br&gt;computeTotal(unit,&lt;br&gt;seats, tariff)&lt;br&gt;&lt;i&gt;testée par Vitest&lt;/i&gt;" vertex="1">
+          <mxGeometry height="80" width="180" x="860" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-14" parent="p3-8" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="&lt;b&gt;rules.ts&lt;/b&gt; (constantes)&lt;br&gt;MIN/MAX_SEATS = 1/6&lt;br&gt;STUDENT_RATE = 0.7&lt;br&gt;GROUP_MIN_SEATS = 4, GROUP_RATE = 0.9&lt;br&gt;CANCELLATION_DEADLINE_MS = 2h&lt;br&gt;EMAIL_REGEX" vertex="1">
+          <mxGeometry height="115" width="250" x="1070" y="175" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-15" parent="1" style="swimlane;html=1;startSize=30;rounded=1;fontStyle=1;fontSize=13;fillColor=#ffe6cc;strokeColor=#d79b00;" value="src/data  — persistance &amp; services techniques" vertex="1">
+          <mxGeometry height="200" width="1340" x="40" y="810" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-16" parent="p3-15" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;" value="&lt;b&gt;ScreeningRepository.ts&lt;/b&gt;&lt;br&gt;findAll(), findById(id)" vertex="1">
+          <mxGeometry height="65" width="240" x="60" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-17" parent="p3-15" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;" value="&lt;b&gt;BookingRepository.ts&lt;/b&gt;&lt;br&gt;findAll(), findById(), findByEmail(),&lt;br&gt;save(booking), update(booking)" vertex="1">
+          <mxGeometry height="65" width="330" x="370" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-18" parent="p3-15" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;" value="&lt;b&gt;Mailer.ts&lt;/b&gt;&lt;br&gt;sendConfirmation()&lt;br&gt;sendCancellation()" vertex="1">
+          <mxGeometry height="65" width="250" x="780" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-19" parent="p3-15" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;" value="&lt;b&gt;PaymentGateway.ts&lt;/b&gt;&lt;br&gt;pay(amount): boolean&lt;br&gt;(refus 1/20)" vertex="1">
+          <mxGeometry height="65" width="260" x="1060" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-20" parent="p3-15" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;" value="&lt;b&gt;jsonDb.ts&lt;/b&gt;&lt;br&gt;readDb() / writeDb() / DB_FILE&lt;br&gt;+ types Screening, Booking" vertex="1">
+          <mxGeometry height="55" width="380" x="200" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-21" parent="1" style="swimlane;html=1;startSize=30;rounded=1;fontStyle=1;fontSize=13;fillColor=#ffffff;" value="Externe / infrastructure" vertex="1">
+          <mxGeometry height="130" width="1340" x="40" y="1060" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-22" parent="p3-21" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" value="&lt;b&gt;express&lt;/b&gt;" vertex="1">
+          <mxGeometry height="50" width="160" x="20" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-23" parent="p3-21" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" value="&lt;b&gt;fs / path&lt;/b&gt;" vertex="1">
+          <mxGeometry height="50" width="140" x="240" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-24" parent="p3-21" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fontSize=12;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;b&gt;data/db.json&lt;/b&gt;" vertex="1">
+          <mxGeometry height="75" width="130" x="450" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-25" parent="p3-21" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;" value="&lt;b&gt;new Date() / Date.now()&lt;/b&gt;&lt;br&gt;appelés par les services" vertex="1">
+          <mxGeometry height="55" width="190" x="640" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-26" parent="p3-21" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;" value="&lt;b&gt;console.log&lt;/b&gt;" vertex="1">
+          <mxGeometry height="50" width="160" x="880" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-27" parent="p3-21" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;" value="&lt;b&gt;Math.random()&lt;/b&gt;" vertex="1">
+          <mxGeometry height="50" width="160" x="1150" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-28" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;b&gt;scripts/seed.ts&lt;/b&gt;&lt;br&gt;(hors couches, outillage)" vertex="1">
+          <mxGeometry height="55" width="230" x="400" y="1240" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-29" edge="1" parent="1" source="p3-2" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p3-4" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-30" edge="1" parent="1" source="p3-4" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p3-5" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-31" edge="1" parent="1" source="p3-4" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p3-6" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-32" edge="1" parent="1" source="p3-4" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p3-7" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-33" edge="1" parent="1" source="p3-4" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;" target="p3-22" value="express()">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="15" y="205" />
+              <mxPoint x="15" y="1130" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p3-34" edge="1" parent="1" source="p3-5" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p3-9" value="list / book">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-35" edge="1" parent="1" source="p3-5" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p3-10" value="book()">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-36" edge="1" parent="1" source="p3-6" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p3-10" value="cancel(), listByEmail()">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-37" edge="1" parent="1" source="p3-7" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p3-11" value="instanceof → code HTTP">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-38" edge="1" parent="1" source="p3-9" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p3-12" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-39" edge="1" parent="1" source="p3-10" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.15;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="p3-12" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="520" y="670" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p3-40" edge="1" parent="1" source="p3-10" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.95;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="p3-13" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="840" y="670" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p3-41" edge="1" parent="1" source="p3-10" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.85;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="p3-14" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="800" y="750" />
+              <mxPoint x="1235" y="750" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p3-42" edge="1" parent="1" source="p3-13" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p3-14" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-43" edge="1" parent="1" source="p3-10" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p3-11" value="throw">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-44" edge="1" parent="1" source="p3-9" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.05;exitY=1;exitDx=0;exitDy=0;entryX=0.06;entryY=0;entryDx=0;entryDy=0;" target="p3-16" value="new ScreeningRepository()">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="114" y="855" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p3-45" edge="1" parent="1" source="p3-9" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.15;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="p3-17" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="142" y="780" />
+              <mxPoint x="575" y="780" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p3-46" edge="1" parent="1" source="p3-10" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.3;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="p3-16" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="580" y="795" />
+              <mxPoint x="220" y="795" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p3-47" edge="1" parent="1" source="p3-10" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.45;exitY=1;exitDx=0;exitDy=0;entryX=0.7;entryY=0;entryDx=0;entryDy=0;" target="p3-17" value="new BookingRepository()">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-48" edge="1" parent="1" source="p3-10" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.65;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="p3-18" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="720" y="785" />
+              <mxPoint x="945" y="785" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p3-49" edge="1" parent="1" source="p3-10" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="p3-19" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="760" y="800" />
+              <mxPoint x="1230" y="800" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p3-50" edge="1" parent="1" source="p3-16" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p3-20" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-51" edge="1" parent="1" source="p3-17" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p3-20" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-52" edge="1" parent="1" source="p3-20" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p3-23" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-53" edge="1" parent="1" source="p3-23" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p3-24" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-54" edge="1" parent="1" source="p3-18" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p3-26" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-55" edge="1" parent="1" source="p3-19" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;" target="p3-27" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-56" edge="1" parent="1" source="p3-28" style="endArrow=block;endFill=1;html=1;fontSize=10;strokeColor=#555555;dashed=1;" target="p3-24" value="régénère">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-57" parent="1" style="shape=note;whiteSpace=wrap;html=1;size=14;align=left;spacingLeft=8;verticalAlign=top;fontSize=11;fillColor=#ffffff;strokeColor=#999999;dashed=1;" value="&lt;b&gt;Règles de dépendance&lt;/b&gt;&lt;br&gt;• presentation → business → data, jamais l&#39;inverse&lt;br&gt;• business ne connaît ni req, ni res, ni code HTTP&lt;br&gt;• Les erreurs métier (errors.ts) sont traduites en HTTP dans errorHandler.ts uniquement&lt;br&gt;• countTakenSeats n&#39;existe qu&#39;à un endroit (seats.ts)&lt;br&gt;• Nombres magiques → constantes nommées (rules.ts)&lt;br&gt;&lt;br&gt;&lt;b&gt;Limites assumées au TP1 → TP2&lt;/b&gt;&lt;br&gt;• BookingService fait &lt;i&gt;new BookingRepository()&lt;/i&gt; : couplage concret (DIP violé)&lt;br&gt;• Temps, hasard, mail toujours non injectés&lt;br&gt;→ TP2 : ports (interfaces) côté métier + adaptateurs (Clock, PaymentPort, MailerPort, Repositories)" vertex="1">
+          <mxGeometry height="320" width="380" x="1420" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-58" parent="1" style="swimlane;html=1;startSize=30;rounded=1;fontStyle=1;fontSize=13;fillColor=#ffffff;" value="Légende" vertex="1">
+          <mxGeometry height="244" width="300" x="1420" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-59" parent="p3-58" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Présentation (HTTP)" vertex="1">
+          <mxGeometry height="26" width="280" x="10" y="38" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-60" parent="p3-58" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;" value="Règle métier" vertex="1">
+          <mxGeometry height="26" width="280" x="10" y="72" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-61" parent="p3-58" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Accès aux données" vertex="1">
+          <mxGeometry height="26" width="280" x="10" y="106" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-62" parent="p3-58" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Infrastructure (temps, hasard, mail, paiement)" vertex="1">
+          <mxGeometry height="26" width="280" x="10" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-63" parent="p3-58" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" value="Lib / module externe" vertex="1">
+          <mxGeometry height="26" width="280" x="10" y="174" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-64" parent="p3-58" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#fff2cc;strokeColor=#d6b656;" value="Config / fichier" vertex="1">
+          <mxGeometry height="26" width="280" x="10" y="208" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

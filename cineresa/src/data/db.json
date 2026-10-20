@@ -295,6 +295,16 @@
       "total": 6210,
       "status": "CONFIRMED",
       "createdAt": "2026-10-19T19:41:02.064Z"
+    },
+    {
+      "id": "b1792481528920",
+      "screeningId": "s2",
+      "email": "test@example.com",
+      "seats": 3,
+      "tariff": "STUDENT",
+      "total": 2205,
+      "status": "CONFIRMED",
+      "createdAt": "2026-10-20T07:32:08.920Z"
     }
   ]
 }

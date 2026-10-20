@@ -6,7 +6,6 @@ GET {{baseUrl}}/screenings
 Accept: application/json
 
 ### 2. Créer une nouvelle réservation pour une séance (ex: ID 1)
-# Attention: Le paiement échouera aléatoirement 5% du temps (erreur 402) selon votre service.
 POST {{baseUrl}}/screenings/s2/bookings
 Content-Type: application/json
 
@@ -21,6 +20,4 @@ GET {{baseUrl}}/bookings?email={{email}}
 Accept: application/json
 
 ### 4. Annuler/Supprimer une réservation spécifique
-# Remplacez "b123456789" par un ID de réservation retourné par l'étape 2
-# Attention: L'annulation retournera une erreur 409 si la séance est dans moins de 2h
 DELETE {{baseUrl}}/bookings/b123456789

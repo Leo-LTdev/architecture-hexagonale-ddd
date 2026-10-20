@@ -1,24 +1,24 @@
 import { test, expect } from "vitest";
 import { TarifPolicy, TarifRules } from "../../models/types/types";
-import Utils from "../../utils/Utils";
-import BookingRepository from "../../data/BookingRepository";
+import JsonDatabase from "../../adapters/data/JsonDatabase";
+import BookingRepository from "../../adapters/data/BookingRepository";
 import {
   BookingServiceInterface,
-  UtilsInterface,
+  JsonDatabaseInterface,
   BookingRepositoryInterface,
   ScreeningRepositoryInterface,
 } from "../../interfaces/Interfaces";
-import ScreeningRepository from "../../data/ScreeningRepository";
+import ScreeningRepository from "../../adapters/data/ScreeningRepository";
 import BookingService from "../BookingService";
 
 // Test unitaire
 test("Calcule correctement le prix avec tarif étudiant et remise dès 4 places.", () => {
-  const utils: UtilsInterface = new Utils();
-  const bookingRepository: BookingRepositoryInterface = new BookingRepository(utils);
-  const screeningRepository: ScreeningRepositoryInterface = new ScreeningRepository(utils);
+  const jsonDatabase: JsonDatabaseInterface = new JsonDatabase();
+  const bookingRepository: BookingRepositoryInterface = new BookingRepository(jsonDatabase);
+  const screeningRepository: ScreeningRepositoryInterface = new ScreeningRepository(jsonDatabase);
 
   const bookingService: BookingServiceInterface = new BookingService(
-    utils,
+    jsonDatabase,
     bookingRepository,
     screeningRepository,
   );

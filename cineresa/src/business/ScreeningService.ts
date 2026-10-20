@@ -1,16 +1,16 @@
-import BookingRepository from "../data/BookingRepository";
-import ScreeningRepository from "../data/ScreeningRepository";
-import Utils from "../utils/Utils";
+import BookingRepository from "../adapters/data/BookingRepository";
+import ScreeningRepository from "../adapters/data/ScreeningRepository";
+import Utils from "../adapters/data/JsonDatabase";
 import { BookingStatus, Screening } from "../models/types/types";
-import { BookingRepositoryInterface, ScreeningRepositoryInterface, ScreeningServiceInterface, UtilsInterface } from "../interfaces/Interfaces";
+import { BookingRepositoryInterface, ScreeningRepositoryInterface, ScreeningServiceInterface, JsonDatabaseInterface } from "../interfaces/Interfaces";
 
 class ScreeningService implements ScreeningServiceInterface {
-  private utils: UtilsInterface;
+  private jsonDatabase: JsonDatabaseInterface;
   private bookingRepository: BookingRepositoryInterface;
   private screeningRepository: ScreeningRepositoryInterface;
 
-  public constructor(utils: UtilsInterface, bookingRepository: BookingRepositoryInterface, screeningRepository: ScreeningRepositoryInterface) {
-    this.utils = utils;
+  public constructor(jsonDatabase: JsonDatabaseInterface, bookingRepository: BookingRepositoryInterface, screeningRepository: ScreeningRepositoryInterface) {
+    this.jsonDatabase = jsonDatabase;
     this.bookingRepository = bookingRepository;
     this.screeningRepository = screeningRepository;
   }

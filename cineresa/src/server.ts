@@ -1,7 +1,7 @@
 import express from 'express';
-import Utils from "./utils/Utils";
-import ScreeningRepository from "./data/ScreeningRepository";
-import BookingRepository from "./data/BookingRepository";
+import Utils from "./adapters/data/JsonDatabase";
+import ScreeningRepository from "./adapters/data/ScreeningRepository";
+import BookingRepository from "./adapters/data/BookingRepository";
 import ScreeningService from "./business/ScreeningService";
 import BookingService from "./business/BookingService";
 import { RoutesController } from "./presentation/routes";

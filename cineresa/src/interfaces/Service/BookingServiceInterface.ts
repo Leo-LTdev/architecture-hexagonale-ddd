@@ -6,7 +6,7 @@ interface BookingInterface {
   BookingsByIdUser(userData: User): BookingDetailsDto[];
   BookByIdUser(screeningData: Screening, data: BookingDto): Booking;
   DeleteBooking(bookingData: Booking): Booking;
-  calculatePrice( // (surtout utilisé pour le test..)
+  calculatePrice(
     basePrice: number,
     seats: number,
     requestedTariff?: TarifPolicy | string,

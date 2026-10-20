@@ -1,7 +1,7 @@
 import HTTPException from "../utils/HTTPException";
-import BookingRepository from "../data/BookingRepository";
-import ScreeningRepository from "../data/ScreeningRepository";
-import { BookingRepositoryInterface, BookingServiceInterface, ScreeningRepositoryInterface, UtilsInterface } from "../interfaces/Interfaces";
+import BookingRepository from "../adapters/data/BookingRepository";
+import ScreeningRepository from "../adapters/data/ScreeningRepository";
+import { BookingRepositoryInterface, BookingServiceInterface, ScreeningRepositoryInterface, JsonDatabaseInterface } from "../interfaces/Interfaces";
 import {
   Booking,
   TarifPolicy,
@@ -14,12 +14,10 @@ import BookingDto from "../models/objects/BookingDto";
 import BookingDetailsDto from "../models/objects/BookingDetailsDto";
 
 class BookingService implements BookingServiceInterface {
-  private utils: UtilsInterface;
   private bookingRepository: BookingRepositoryInterface;
   private screeningRepository: ScreeningRepositoryInterface;
 
-  public constructor(utils: UtilsInterface, bookingRepository: BookingRepositoryInterface, screeningRepository: ScreeningRepositoryInterface) {
-    this.utils = utils;
+  public constructor(bookingRepository: BookingRepositoryInterface, screeningRepository: ScreeningRepositoryInterface) {
     this.bookingRepository = bookingRepository;
     this.screeningRepository = screeningRepository;
   }

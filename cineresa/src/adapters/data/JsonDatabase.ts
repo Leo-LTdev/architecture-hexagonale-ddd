@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
-import { JsonDatabaseInterface } from "../../interfaces/Interfaces";
+import { JsonDatabaseInterface } from "../../domain/interfaces/Interfaces";
 
 dotenv.config();
 

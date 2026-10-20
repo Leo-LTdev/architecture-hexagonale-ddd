@@ -1,4 +1,4 @@
-import HTTPException from "../utils/HTTPException";
+import HTTPException from "../domain/utils/HTTPException";
 import BookingRepository from "../adapters/data/BookingRepository";
 import ScreeningRepository from "../adapters/data/ScreeningRepository";
 import { BookingRepositoryInterface, BookingServiceInterface, ScreeningRepositoryInterface, JsonDatabaseInterface } from "../interfaces/Interfaces";
@@ -9,9 +9,9 @@ import {
   BookingStatus,
   Screening,
   User,
-} from "../models/types/types";
-import BookingDto from "../models/objects/BookingDto";
-import BookingDetailsDto from "../models/objects/BookingDetailsDto";
+} from "../domain/models/types/types";
+import BookingDto from "../domain/models/objects/BookingDto";
+import BookingDetailsDto from "../domain/models/objects/BookingDetailsDto";
 
 class BookingService implements BookingServiceInterface {
   private bookingRepository: BookingRepositoryInterface;

@@ -1,7 +1,7 @@
 import BookingRepository from "../adapters/data/BookingRepository";
 import ScreeningRepository from "../adapters/data/ScreeningRepository";
 import Utils from "../adapters/data/JsonDatabase";
-import { BookingStatus, Screening } from "../models/types/types";
+import { BookingStatus, Screening } from "../domain/models/types/types";
 import { BookingRepositoryInterface, ScreeningRepositoryInterface, ScreeningServiceInterface, JsonDatabaseInterface } from "../interfaces/Interfaces";
 
 class ScreeningService implements ScreeningServiceInterface {

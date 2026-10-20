@@ -1,5 +1,5 @@
 import { ScreeningRepositoryInterface, JsonDatabaseInterface } from '../../interfaces/Interfaces';
-import { Screening } from '../../models/types/types';
+import { Screening } from '../../domain/models/types/types';
 class ScreeningRepository implements ScreeningRepositoryInterface {
     private jsonDatabase: JsonDatabaseInterface
     public constructor(jsonDatabase: JsonDatabaseInterface){

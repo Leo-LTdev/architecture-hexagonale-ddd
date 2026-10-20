@@ -1,4 +1,4 @@
-import {Booking} from '../../models/types/types'
+import {Booking} from '../../domain/models/types/types'
 import { BookingRepositoryInterface, JsonDatabaseInterface } from '../../interfaces/Interfaces';
 
 class BookingRepository implements BookingRepositoryInterface {

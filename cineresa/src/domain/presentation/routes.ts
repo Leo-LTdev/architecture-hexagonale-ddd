@@ -1,6 +1,6 @@
 import express, { type Response } from 'express';
-import ScreeningService from "../business/ScreeningService";
-import BookingService from "../business/BookingService";
+import ScreeningService from "../../business/ScreeningService";
+import BookingService from "../../business/BookingService";
 import HTTPException from "../utils/HTTPException";
 import { Booking, Screening, User } from "../models/types/types";
 import BookingDto from "../models/objects/BookingDto";

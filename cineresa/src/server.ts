@@ -4,7 +4,7 @@ import ScreeningRepository from "./adapters/data/ScreeningRepository";
 import BookingRepository from "./adapters/data/BookingRepository";
 import ScreeningService from "./business/ScreeningService";
 import BookingService from "./business/BookingService";
-import { RoutesController } from "./presentation/routes";
+import { RoutesController } from "./domain/presentation/routes";
 
 const app = express();
 app.use(express.json());

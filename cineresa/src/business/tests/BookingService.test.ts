@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { TarifPolicy, TarifRules } from "../../models/types/types";
+import { TarifPolicy, TarifRules } from "../../domain/models/types/types";
 import JsonDatabase from "../../adapters/data/JsonDatabase";
 import BookingRepository from "../../adapters/data/BookingRepository";
 import {

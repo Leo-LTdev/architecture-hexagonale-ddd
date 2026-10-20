@@ -2,15 +2,13 @@ import BookingRepository from "../adapters/data/BookingRepository";
 import ScreeningRepository from "../adapters/data/ScreeningRepository";
 import Utils from "../adapters/data/JsonDatabase";
 import { BookingStatus, Screening } from "../domain/models/types/types";
-import { BookingRepositoryInterface, ScreeningRepositoryInterface, ScreeningServiceInterface, JsonDatabaseInterface } from "../interfaces/Interfaces";
+import { BookingRepositoryInterface, ScreeningRepositoryInterface, ScreeningServiceInterface } from "../domain/interfaces/Interfaces";
 
 class ScreeningService implements ScreeningServiceInterface {
-  private jsonDatabase: JsonDatabaseInterface;
   private bookingRepository: BookingRepositoryInterface;
   private screeningRepository: ScreeningRepositoryInterface;
 
-  public constructor(jsonDatabase: JsonDatabaseInterface, bookingRepository: BookingRepositoryInterface, screeningRepository: ScreeningRepositoryInterface) {
-    this.jsonDatabase = jsonDatabase;
+  public constructor(bookingRepository: BookingRepositoryInterface, screeningRepository: ScreeningRepositoryInterface) {
     this.bookingRepository = bookingRepository;
     this.screeningRepository = screeningRepository;
   }

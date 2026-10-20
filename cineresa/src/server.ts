@@ -14,8 +14,8 @@ const utils = new Utils();
 const screeningRepository = new ScreeningRepository(utils);
 const bookingRepository = new BookingRepository(utils);
 
-const screeningService = new ScreeningService(utils, bookingRepository, screeningRepository);
-const bookingService = new BookingService(utils, bookingRepository, screeningRepository);
+const screeningService = new ScreeningService(bookingRepository, screeningRepository);
+const bookingService = new BookingService(bookingRepository, screeningRepository);
 
 const routesController = new RoutesController(screeningService, bookingService);
 

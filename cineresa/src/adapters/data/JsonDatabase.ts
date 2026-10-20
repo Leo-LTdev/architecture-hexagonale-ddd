@@ -6,7 +6,7 @@ import { JsonDatabaseInterface } from "../../interfaces/Interfaces";
 dotenv.config();
 
 class JsonDatabase implements JsonDatabaseInterface {
-    private readonly DB_FILE= path.join(process.env.DB_FILE ?? "/db.json");
+    private readonly DB_FILE= path.join(process.env.DB_FILE ?? "./src/adapters/data/db.json");
 
     public readDb(): any {
         console.log(this.DB_FILE)

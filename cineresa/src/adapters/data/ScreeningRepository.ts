@@ -1,6 +1,6 @@
-import { ScreeningRepositoryInterface, JsonDatabaseInterface } from '../../interfaces/Interfaces';
+import { JsonDatabaseInterface, ScreeningRepositoryInterface } from '../../domain/interfaces/Interfaces';
 import { Screening } from '../../domain/models/types/types';
-class ScreeningRepository implements ScreeningRepositoryInterface {
+class ScreeningRepository implements ScreeningRepositoryInterface{
     private jsonDatabase: JsonDatabaseInterface
     public constructor(jsonDatabase: JsonDatabaseInterface){
         this.jsonDatabase = jsonDatabase;

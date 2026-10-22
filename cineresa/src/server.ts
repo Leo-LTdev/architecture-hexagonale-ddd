@@ -1,23 +1,48 @@
 import express from 'express';
-import Utils from "./adapters/data/JsonDatabase";
+import JsonDatabase from "./adapters/data/JsonDatabase";
 import ScreeningRepository from "./adapters/data/ScreeningRepository";
 import BookingRepository from "./adapters/data/BookingRepository";
-import ScreeningService from "./business/ScreeningService";
-import BookingService from "./business/BookingService";
-import { RoutesController } from "./domain/presentation/routes";
+import SystemClock from './adapters/clock/SystemClock';
+import TimestampIdGenerator from './adapters/id/TimestampIdGenerator';
+import ConsoleNotifier from './adapters/notification/ConsoleNotifier';
+import FakePaymentGateway from './adapters/payment/FakePaymentGateway';
+import { RoutesController } from './adapters/http/routes';
+import BookSeatsService from './application/usecases/BookSeatsService';
+import CancelBookingService from './application/usecases/CancelBookingService';
+import ListScreeningsService from './application/usecases/ListScreeningsService';
+import ListUserBookingsService from './application/usecases/ListUserBookingsService';
 
 const app = express();
 app.use(express.json());
 
-const utils = new Utils();
+// Adapters (ports out)
+const jsonDatabase = new JsonDatabase();
+const screeningRepository = new ScreeningRepository(jsonDatabase);
+const bookingRepository = new BookingRepository(jsonDatabase);
+const clock = new SystemClock();
+const idGenerator = new TimestampIdGenerator();
+const notifier = new ConsoleNotifier();
+const paymentGateway = new FakePaymentGateway();
 
-const screeningRepository = new ScreeningRepository(utils);
-const bookingRepository = new BookingRepository(utils);
+// Use cases (ports in)
+const bookSeatsService = new BookSeatsService(
+  bookingRepository,
+  screeningRepository,
+  paymentGateway,
+  notifier,
+  clock,
+  idGenerator,
+);
+const cancelBookingService = new CancelBookingService(bookingRepository, screeningRepository, notifier, clock);
+const listScreeningsService = new ListScreeningsService(bookingRepository, screeningRepository, clock);
+const listUserBookingsService = new ListUserBookingsService(bookingRepository, screeningRepository);
 
-const screeningService = new ScreeningService(bookingRepository, screeningRepository);
-const bookingService = new BookingService(bookingRepository, screeningRepository);
-
-const routesController = new RoutesController(screeningService, bookingService);
+const routesController = new RoutesController(
+  bookSeatsService,
+  cancelBookingService,
+  listScreeningsService,
+  listUserBookingsService,
+);
 
 app.use(routesController.router);
 

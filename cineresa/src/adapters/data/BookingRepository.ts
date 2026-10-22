@@ -1,7 +1,9 @@
 import {Booking} from '../../domain/models/types/types'
-import { BookingRepositoryInterface, JsonDatabaseInterface } from '../../interfaces/Interfaces';
+import BookingRepositoryPort from '../../application/ports/out/BookingRepository';
+import { JsonDatabaseInterface } from '../../domain/interfaces/Interfaces';
 
-class BookingRepository implements BookingRepositoryInterface {
+
+class BookingRepository implements BookingRepositoryPort{
     private jsonDatabase: JsonDatabaseInterface;
 
     public constructor(jsonDatabase: JsonDatabaseInterface) {

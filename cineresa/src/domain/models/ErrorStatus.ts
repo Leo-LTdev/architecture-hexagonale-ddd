@@ -1,0 +1,6 @@
+export enum ErrorStatus{
+    NOT_FOUND = "NOT_FOUND",
+    INVALID = "INVALID",
+    CONFLICT = "CONLICT",
+    PAYEMENT_REFUSED = "PAYMENT_REFUSED"
+}

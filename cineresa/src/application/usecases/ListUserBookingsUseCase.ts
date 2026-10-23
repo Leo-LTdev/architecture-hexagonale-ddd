@@ -1,13 +1,14 @@
-import ListUserBookingsUseCase from "../ports/in/ListUserBookingsUseCase";
-import BookingRepository from "../ports/out/BookingRepository";
-import ScreeningRepository from "../ports/out/ScreeningRepository";
+import ListUserBookingsInterface from "../ports/in/ListUserBookingsInterface";
+import BookingRepositoryInterface from "../ports/out/BookingRepositoryInterface";
+import ScreeningRepositoryInterface from "../ports/out/ScreeningRepositoryInterface";
 import BookingDetailsView from "../dto/BookingDetailsView";
 
-class ListUserBookingsService implements ListUserBookingsUseCase {
-  private bookingRepository: BookingRepository;
-  private screeningRepository: ScreeningRepository;
+export class ListUserBookingsUseCase implements ListUserBookingsInterface{
+  private bookingRepository: BookingRepositoryInterface;
+  private screeningRepository: ScreeningRepositoryInterface;
 
-  public constructor(bookingRepository: BookingRepository, screeningRepository: ScreeningRepository) {
+  public constructor(bookingRepository: BookingRepositoryInterface, 
+    screeningRepository: ScreeningRepositoryInterface) {
     this.bookingRepository = bookingRepository;
     this.screeningRepository = screeningRepository;
   }
@@ -33,5 +34,3 @@ class ListUserBookingsService implements ListUserBookingsUseCase {
     });
   }
 }
-
-export default ListUserBookingsService;

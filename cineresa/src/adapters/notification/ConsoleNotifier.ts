@@ -1,4 +1,4 @@
-import Notifier from "../../application/ports/out/Notifier";
+import Notifier from "../../application/ports/out/NotifierInterface";
 
 class ConsoleNotifier implements Notifier {
   public notify(to: string, message: string): void {

@@ -1,23 +1,23 @@
 import { NotFoundError, BusinessRuleError, DomainError } from "../../domain/errors/errors";
 import { Booking, BookingStatus } from "../../domain/models/types/types";
-import CancelBookingUseCase from "../ports/in/CancelBookingUseCase";
-import BookingRepository from "../ports/out/BookingRepository";
-import ScreeningRepository from "../ports/out/ScreeningRepository";
-import Notifier from "../ports/out/Notifier";
-import Clock from "../ports/out/Clock";
-import { ErrorStatus } from "../../domain/models/ErrorStatus";
+import CancelBookingInterface from "../ports/in/CancelBookingInterface";
+import BookingRepositoryInterface from "../ports/out/BookingRepositoryInterface";
+import ScreeningRepositoryInterface from "../ports/out/ScreeningRepositoryInterface";
+import NotifierInterface from "../ports/out/NotifierInterface";
+import ClockInterface from "../ports/out/ClockInterface";
+import { ErrorStatus } from "../../domain/models/ErrorStatusEnum";
 
-class CancelBookingService implements CancelBookingUseCase {
-  private bookingRepository: BookingRepository;
-  private screeningRepository: ScreeningRepository;
-  private notifier: Notifier;
-  private clock: Clock;
+class CancelBookingUseCase implements CancelBookingInterface {
+  private bookingRepository: BookingRepositoryInterface;
+  private screeningRepository: ScreeningRepositoryInterface;
+  private notifier: NotifierInterface;
+  private clock: ClockInterface;
 
   public constructor(
-    bookingRepository: BookingRepository,
-    screeningRepository: ScreeningRepository,
-    notifier: Notifier,
-    clock: Clock,
+    bookingRepository: BookingRepositoryInterface,
+    screeningRepository: ScreeningRepositoryInterface,
+    notifier: NotifierInterface,
+    clock: ClockInterface,
   ) {
     this.bookingRepository = bookingRepository;
     this.screeningRepository = screeningRepository;
@@ -65,4 +65,4 @@ class CancelBookingService implements CancelBookingUseCase {
   }
 }
 
-export default CancelBookingService;
+export default CancelBookingUseCase;

@@ -1,16 +1,18 @@
 import { BookingStatus } from "../../domain/models/types/types";
-import ListScreeningsUseCase from "../ports/in/ListScreeningsUseCase";
-import BookingRepository from "../ports/out/BookingRepository";
-import ScreeningRepository from "../ports/out/ScreeningRepository";
-import Clock from "../ports/out/Clock";
+import ListScreeningsInterface from "../ports/in/ListScreeningsInterface";
+import BookingRepositoryInterface from "../ports/out/BookingRepositoryInterface";
+import ScreeningRepositoryInterface from "../ports/out/ScreeningRepositoryInterface";
+import ClockInterface from "../ports/out/ClockInterface";
 import ScreeningView from "../dto/ScreeningView";
 
-class ListScreeningsService implements ListScreeningsUseCase {
-  private bookingRepository: BookingRepository;
-  private screeningRepository: ScreeningRepository;
-  private clock: Clock;
+class ListScreeningsUseCase implements ListScreeningsUseCase {
+  private bookingRepository: BookingRepositoryInterface;
+  private screeningRepository: ScreeningRepositoryInterface;
+  private clock: ClockInterface;
 
-  public constructor(bookingRepository: BookingRepository, screeningRepository: ScreeningRepository, clock: Clock) {
+  public constructor(bookingRepository: BookingRepositoryInterface, 
+    screeningRepository: ScreeningRepositoryInterface, 
+    clock: ClockInterface) {
     this.bookingRepository = bookingRepository;
     this.screeningRepository = screeningRepository;
     this.clock = clock;
@@ -37,4 +39,4 @@ class ListScreeningsService implements ListScreeningsUseCase {
   }
 }
 
-export default ListScreeningsService;
+export default ListScreeningsUseCase;

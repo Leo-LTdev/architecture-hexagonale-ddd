@@ -1,7 +1,7 @@
 import ScreeningView from "../../dto/ScreeningView";
 
-interface ListScreeningsUseCase {
+interface ListScreeningsInterface {
   execute(): ScreeningView[];
 }
 
-export default ListScreeningsUseCase;
+export default ListScreeningsInterface;

@@ -1,4 +1,4 @@
-import Clock from "../../application/ports/out/Clock";
+import Clock from "../../application/ports/out/ClockInterface";
 
 class SystemClock implements Clock {
   public now(): Date {

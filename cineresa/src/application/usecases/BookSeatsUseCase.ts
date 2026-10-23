@@ -1,31 +1,31 @@
 import { DomainError } from "../../domain/errors/errors";
 import { Booking, BookingStatus, PriceCalculator } from "../../domain/models/types/types";
 import calculate from "../../domain/utils/PriceCalculator";
-import BookSeatsUseCase from "../ports/in/BookSeatsUseCase";
-import BookingRepository from "../ports/out/BookingRepository";
-import ScreeningRepository from "../ports/out/ScreeningRepository";
-import PaymentGateway from "../ports/out/PaymentGateway";
-import Notifier from "../ports/out/Notifier";
-import Clock from "../ports/out/Clock";
-import IdGenerator from "../ports/out/IdGenerator";
+import BookSeatsInterface from "../ports/in/BookSeatsInterface";
+import BookingRepositoryInterface from "../ports/out/BookingRepositoryInterface";
+import ScreeningRepositoryInterface from "../ports/out/ScreeningRepositoryInterface";
+import PaymentGatewayInterface from "../ports/out/PaymentGatewayInterface";
+import NotifierInterface from "../ports/out/NotifierInterface";
+import ClockInterface from "../ports/out/ClockInterface";
+import IdGeneratorInterface from "../ports/out/IdGeneratorInterface";
 import BookSeatsCommand from "../dto/BookSeatsCommand";
-import { ErrorStatus } from "../../domain/models/ErrorStatus";
+import { ErrorStatus } from "../../domain/models/ErrorStatusEnum";
 
-class BookSeatsService implements BookSeatsUseCase {
-  private bookingRepository: BookingRepository;
-  private screeningRepository: ScreeningRepository;
-  private paymentGateway: PaymentGateway;
-  private notifier: Notifier;
-  private clock: Clock;
-  private idGenerator: IdGenerator;
+class BookSeatsUseCase implements BookSeatsInterface {
+  private bookingRepository: BookingRepositoryInterface;
+  private screeningRepository: ScreeningRepositoryInterface;
+  private paymentGateway: PaymentGatewayInterface;
+  private notifier: NotifierInterface;
+  private clock: ClockInterface;
+  private idGenerator: IdGeneratorInterface;
 
   public constructor(
-    bookingRepository: BookingRepository,
-    screeningRepository: ScreeningRepository,
-    paymentGateway: PaymentGateway,
-    notifier: Notifier,
-    clock: Clock,
-    idGenerator: IdGenerator,
+    bookingRepository: BookingRepositoryInterface,
+    screeningRepository: ScreeningRepositoryInterface,
+    paymentGateway: PaymentGatewayInterface,
+    notifier: NotifierInterface,
+    clock: ClockInterface,
+    idGenerator: IdGeneratorInterface,
   ) {
     this.bookingRepository = bookingRepository;
     this.screeningRepository = screeningRepository;
@@ -107,4 +107,4 @@ class BookSeatsService implements BookSeatsUseCase {
   }
 }
 
-export default BookSeatsService;
+export default BookSeatsUseCase;

@@ -1,4 +1,4 @@
-import IdGenerator from "../../application/ports/out/IdGenerator";
+import IdGenerator from "../../application/ports/out/IdGeneratorInterface";
 
 class TimestampIdGenerator implements IdGenerator {
   public generate(): string {

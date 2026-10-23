@@ -2,7 +2,7 @@
 { ...booking, "movie": "Dune: Part Three", "startsAt": "2026-10-20T10:28:03.002Z" }
 */
 
-import Booking from "../types/Booking";
+import Booking from "../types/BookingType";
 
 class BookingDetailsDto{
     public booking: Booking;

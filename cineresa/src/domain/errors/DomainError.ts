@@ -1,4 +1,4 @@
-import { ErrorStatus } from "../models/ErrorStatus";
+import { ErrorStatus } from "../models/ErrorStatusEnum";
 
 class DomainError extends Error{
   constructor(message: ErrorStatus) {

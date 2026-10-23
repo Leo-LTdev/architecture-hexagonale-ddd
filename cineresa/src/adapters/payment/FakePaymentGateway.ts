@@ -1,4 +1,4 @@
-import PaymentGateway from "../../application/ports/out/PaymentGateway";
+import PaymentGateway from "../../application/ports/out/PaymentGatewayInterface";
 
 class FakePaymentGateway implements PaymentGateway {
   // simule un prestataire qui refuse ~5% des paiements

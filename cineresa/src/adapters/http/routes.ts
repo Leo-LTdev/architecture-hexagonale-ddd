@@ -2,10 +2,10 @@ import express, { type Response } from "express";
 import HTTPException from "../../domain/utils/HTTPException";
 import { Booking, Screening, User } from "../../domain/models/types/types";
 import BookingDto from "../../domain/models/objects/BookingDto";
-import BookSeatsUseCase from "../../application/ports/in/BookSeatsUseCase";
-import CancelBookingUseCase from "../../application/ports/in/CancelBookingUseCase";
-import ListScreeningsUseCase from "../../application/ports/in/ListScreeningsUseCase";
-import ListUserBookingsUseCase from "../../application/ports/in/ListUserBookingsUseCase";
+import BookSeatsUseCase from "../../application/ports/in/BookSeatsInterface";
+import CancelBookingUseCase from "../../application/ports/in/CancelBookingInterface";
+import ListScreeningsUseCase from "../../application/ports/in/ListScreeningsInterface";
+import ListUserBookingsUseCase from "../../application/ports/in/ListUserBookingsInterface";
 import BookSeatsCommand from "../../application/dto/BookSeatsCommand";
 
 export class RoutesController {

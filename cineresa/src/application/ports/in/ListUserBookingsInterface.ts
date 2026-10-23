@@ -1,7 +1,7 @@
 import BookingDetailsView from "../../dto/BookingDetailsView";
 
-interface ListUserBookingsUseCase {
+interface ListUserBookingsInterface {
   execute(email: string): BookingDetailsView[];
 }
 
-export default ListUserBookingsUseCase;
+export default ListUserBookingsInterface;

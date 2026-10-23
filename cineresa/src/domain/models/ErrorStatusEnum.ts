@@ -1,4 +1,4 @@
-export enum ErrorStatus{
+export enum ErrorStatusEnum{
     NOT_FOUND = "NOT_FOUND",
     INVALID = "INVALID",
     CONFLICT = "CONLICT",

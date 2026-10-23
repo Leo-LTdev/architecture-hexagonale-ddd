@@ -7,10 +7,10 @@ import TimestampIdGenerator from './adapters/id/TimestampIdGenerator';
 import ConsoleNotifier from './adapters/notification/ConsoleNotifier';
 import FakePaymentGateway from './adapters/payment/FakePaymentGateway';
 import { RoutesController } from './adapters/http/routes';
-import BookSeatsService from './application/usecases/BookSeatsService';
-import CancelBookingService from './application/usecases/CancelBookingService';
-import ListScreeningsService from './application/usecases/ListScreeningsService';
-import ListUserBookingsService from './application/usecases/ListUserBookingsService';
+import BookSeatsService from './application/usecases/BookSeatsUseCase';
+import CancelBookingService from './application/usecases/CancelBookingUseCase';
+import ListScreeningsService from './application/usecases/ListScreeningsUseCase';
+import ListUserBookingsService from './application/usecases/ListUserBookingsUseCase';
 
 const app = express();
 app.use(express.json());

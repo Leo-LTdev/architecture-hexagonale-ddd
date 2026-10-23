@@ -1,8 +1,8 @@
 import { Booking } from "../../../domain/models/types/types";
 import BookSeatsCommand from "../../dto/BookSeatsCommand";
 
-interface BookSeatsUseCase {
+interface BookSeatsInterface {
   execute(command: BookSeatsCommand): Booking;
 }
 
-export default BookSeatsUseCase;
+export default BookSeatsInterface;

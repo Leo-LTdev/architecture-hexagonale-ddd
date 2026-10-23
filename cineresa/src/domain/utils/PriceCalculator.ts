@@ -1,5 +1,5 @@
-import TarifPolicy from "../models/TariffPolicyEnum";
-import TarifRules from "../models/TariffRulesEnum";
+import TarifPolicy from "../models/Enums/TariffPolicyEnum";
+import TarifRules from "../models/Enums/TariffRulesEnum";
 
 function calculate(
     basePrice: number,

@@ -1,6 +1,6 @@
-import BookingStatus from "../models/BookingStatusEnum";
-import { ErrorStatus } from "../models/ErrorStatusEnum";
-import TarifPolicy from "../models/TariffPolicyEnum";
-import TarifRules from "../models/TariffRulesEnum";
+import { BookingStatusEnum } from "../models/Enums/BookingStatusEnum";
+import { ErrorStatusEnum } from "../models/Enums/ErrorStatusEnum";
+import { TariffPolicyEnum } from "../models/Enums/TariffPolicyEnum";
+import { TariffRulesEnum } from "../models/Enums/TariffRulesEnum";
 
-export { BookingStatus, ErrorStatus, TarifPolicy, TarifRules };
+export { BookingStatusEnum, ErrorStatusEnum, TariffPolicyEnum, TariffRulesEnum };

@@ -1,11 +1,12 @@
-import { NotFoundError, BusinessRuleError, DomainError } from "../../domain/errors/errors";
-import { Booking, BookingStatus } from "../../domain/models/types/types";
+import { DomainError } from "../../domain/errors/errors";
+import { BookingType as Booking } from "../../domain/utils/models";
+import { BookingStatusEnum as BookingStatus } from "../../domain/utils/enums";
 import CancelBookingInterface from "../ports/in/CancelBookingInterface";
 import BookingRepositoryInterface from "../ports/out/BookingRepositoryInterface";
 import ScreeningRepositoryInterface from "../ports/out/ScreeningRepositoryInterface";
 import NotifierInterface from "../ports/out/NotifierInterface";
 import ClockInterface from "../ports/out/ClockInterface";
-import { ErrorStatus } from "../../domain/models/ErrorStatusEnum";
+import { ErrorStatusEnum as ErrorStatus } from "../../domain/models/Enums/ErrorStatusEnum";
 
 class CancelBookingUseCase implements CancelBookingInterface {
   private bookingRepository: BookingRepositoryInterface;

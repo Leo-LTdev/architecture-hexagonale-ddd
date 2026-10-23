@@ -1,31 +1,31 @@
 import express, { type Response } from "express";
 import HTTPException from "../../domain/utils/HTTPException";
-import { Booking, Screening, User } from "../../domain/models/types/types";
+import { ScreeningType as Screening, BookingType as Booking, User } from "../../domain/utils/models";
 import BookingDto from "../../domain/models/objects/BookingDto";
-import BookSeatsUseCase from "../../application/ports/in/BookSeatsInterface";
-import CancelBookingUseCase from "../../application/ports/in/CancelBookingInterface";
-import ListScreeningsUseCase from "../../application/ports/in/ListScreeningsInterface";
-import ListUserBookingsUseCase from "../../application/ports/in/ListUserBookingsInterface";
+import BookSeatsInterface from "../../application/ports/in/BookSeatsInterface";
+import CancelBookingInterface from "../../application/ports/in/CancelBookingInterface";
+import ListScreeningsInterface from "../../application/ports/in/ListScreeningsInterface";
+import ListUserBookingsInterface from "../../application/ports/in/ListUserBookingsInterface";
 import BookSeatsCommand from "../../application/dto/BookSeatsCommand";
 
 export class RoutesController {
   public router = express.Router();
-  private bookSeatsUseCase: BookSeatsUseCase;
-  private cancelBookingUseCase: CancelBookingUseCase;
-  private listScreeningUseCase: ListScreeningsUseCase;
-  private listUserBookingUseCase: ListUserBookingsUseCase;
+  private bookSeatsInterface: BookSeatsInterface;
+  private cancelBookingInterface: CancelBookingInterface;
+  private listScreeningsInterface: ListScreeningsInterface;
+  private listUserBookingsInterface: ListUserBookingsInterface;
 
   constructor(
-    bookSeatsUseCase: BookSeatsUseCase,
-    cancelBookingUseCase: CancelBookingUseCase,
-    listScreeningUseCase: ListScreeningsUseCase,
-    listUserBookingUseCase: ListUserBookingsUseCase,
+    bookSeatsInterface: BookSeatsInterface,
+    cancelBookingInterface: CancelBookingInterface,
+    listScreeningsInterface: ListScreeningsInterface,
+    listUserBookingsInterface: ListUserBookingsInterface,
   ) {
     this.initializeRoutes();
-    this.bookSeatsUseCase = bookSeatsUseCase;
-    this.cancelBookingUseCase = cancelBookingUseCase;
-    this.listScreeningUseCase = listScreeningUseCase;
-    this.listUserBookingUseCase = listUserBookingUseCase;
+    this.bookSeatsInterface = bookSeatsInterface;
+    this.cancelBookingInterface = cancelBookingInterface;
+    this.listScreeningsInterface = listScreeningsInterface;
+    this.listUserBookingsInterface = listUserBookingsInterface;
   }
 
   private handleError = (e: unknown, res: Response) => {
@@ -36,7 +36,7 @@ export class RoutesController {
 
   private initializeRoutes() {
     this.router.get("/screenings", (req, res) => {
-      const result = this.listScreeningUseCase.execute()
+      const result = this.listScreeningsInterface.execute()
       res.status(200).json(result);
     });
 
@@ -50,7 +50,7 @@ export class RoutesController {
           req.body?.seats,
           req.body?.tariff,
         );
-        const result = this.bookSeatsUseCase.execute(new BookSeatsCommand(screening.id, data.email, data.seats, data.tariff));
+        const result = this.bookSeatsInterface.execute(new BookSeatsCommand(screening.id, data.email, data.seats, data.tariff));
         res.status(201).json(result);
       } catch (e) {
         this.handleError(e, res);
@@ -60,7 +60,7 @@ export class RoutesController {
     this.router.delete("/bookings/:id", async (req, res) => {
       try {
         const booking = Booking.fromJSON(JSON.stringify({ id: req.params.id }));
-        this.cancelBookingUseCase.execute(booking.id ?? null);
+        this.cancelBookingInterface.execute(booking.id ?? null);
         res.status(204).send();
       } catch (e) {
         this.handleError(e, res);
@@ -69,7 +69,7 @@ export class RoutesController {
 
     this.router.get("/bookings", async (req, res) => {
       const user = new User(0, String(req.query.email ?? ""));
-      res.json(this.listUserBookingUseCase.execute(user.email));
+      res.json(this.listUserBookingsInterface.execute(user.email));
     });
   }
 }

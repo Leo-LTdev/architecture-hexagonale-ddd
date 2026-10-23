@@ -1,8 +1,8 @@
 // Ports entrants
-import BookSeatsUseCase from "../../application/ports/in/BookSeatsInterface";
-import CancelBookingUseCase from "../../application/ports/in/CancelBookingInterface";
-import ListScreeningsUseCase from "../../application/ports/in/ListScreeningsInterface";
-import ListUserBookingsUseCase from "../../application/ports/in/ListUserBookingsInterface";
+import BookSeatsInterface from "../../application/ports/in/BookSeatsInterface";
+import CancelBookingInterface from "../../application/ports/in/CancelBookingInterface";
+import ListScreeningsInterface from "../../application/ports/in/ListScreeningsInterface";
+import ListUserBookingsInterface from "../../application/ports/in/ListUserBookingsInterface";
 import JsonDatabaseInterface from "../../application/ports/in/JsonDatabaseInterface";
 
 // Ports sortants
@@ -15,10 +15,10 @@ import PaymentGateway from "../../application/ports/out/PaymentGatewayInterface"
 import HTTPExceptionInterface from "../../application/ports/out/HTTPExceptionInterface";
 
 export type {
-  BookSeatsUseCase,
-  CancelBookingUseCase,
-  ListScreeningsUseCase,
-  ListUserBookingsUseCase,
+  BookSeatsInterface,
+  CancelBookingInterface,
+  ListScreeningsInterface,
+  ListUserBookingsInterface,
   JsonDatabaseInterface,
   BookingRepository,
   ScreeningRepository,

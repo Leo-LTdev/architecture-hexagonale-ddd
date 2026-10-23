@@ -7,10 +7,10 @@ import TimestampIdGenerator from './adapters/id/TimestampIdGenerator';
 import ConsoleNotifier from './adapters/notification/ConsoleNotifier';
 import FakePaymentGateway from './adapters/payment/FakePaymentGateway';
 import { RoutesController } from './adapters/http/routes';
-import BookSeatsService from './application/usecases/BookSeatsUseCase';
-import CancelBookingService from './application/usecases/CancelBookingUseCase';
-import ListScreeningsService from './application/usecases/ListScreeningsUseCase';
-import ListUserBookingsService from './application/usecases/ListUserBookingsUseCase';
+import BookSeatsUseCase from './application/usecases/BookSeatsUseCase';
+import { ListUserBookingsUseCase } from './application/usecases/ListUserBookingsUseCase';
+import CancelBookingUseCase from './application/usecases/CancelBookingUseCase';
+import ListScreeningsUseCase from './application/usecases/ListScreeningsUseCase';
 
 const app = express();
 app.use(express.json());
@@ -25,7 +25,7 @@ const notifier = new ConsoleNotifier();
 const paymentGateway = new FakePaymentGateway();
 
 // Use cases (ports in)
-const bookSeatsService = new BookSeatsService(
+const bookSeatsUsecase = new BookSeatsUseCase(
   bookingRepository,
   screeningRepository,
   paymentGateway,
@@ -33,12 +33,12 @@ const bookSeatsService = new BookSeatsService(
   clock,
   idGenerator,
 );
-const cancelBookingService = new CancelBookingService(bookingRepository, screeningRepository, notifier, clock);
-const listScreeningsService = new ListScreeningsService(bookingRepository, screeningRepository, clock);
-const listUserBookingsService = new ListUserBookingsService(bookingRepository, screeningRepository);
+const cancelBookingService = new CancelBookingUseCase(bookingRepository, screeningRepository, notifier, clock);
+const listScreeningsService = new ListScreeningsUseCase(bookingRepository, screeningRepository, clock);
+const listUserBookingsService = new ListUserBookingsUseCase(bookingRepository, screeningRepository);
 
 const routesController = new RoutesController(
-  bookSeatsService,
+  bookSeatsUsecase,
   cancelBookingService,
   listScreeningsService,
   listUserBookingsService,

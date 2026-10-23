@@ -1,5 +1,5 @@
 import { DomainError } from "../../domain/errors/errors";
-import { Booking, BookingStatus, PriceCalculator } from "../../domain/models/types/types";
+import { BookingType as Booking} from "../../domain/utils/models";
 import calculate from "../../domain/utils/PriceCalculator";
 import BookSeatsInterface from "../ports/in/BookSeatsInterface";
 import BookingRepositoryInterface from "../ports/out/BookingRepositoryInterface";
@@ -9,7 +9,8 @@ import NotifierInterface from "../ports/out/NotifierInterface";
 import ClockInterface from "../ports/out/ClockInterface";
 import IdGeneratorInterface from "../ports/out/IdGeneratorInterface";
 import BookSeatsCommand from "../dto/BookSeatsCommand";
-import { ErrorStatus } from "../../domain/models/ErrorStatusEnum";
+import { ErrorStatusEnum as ErrorStatus } from "../../domain/models/Enums/ErrorStatusEnum";
+import { BookingStatusEnum as BookingStatus } from "../../domain/utils/enums";
 
 class BookSeatsUseCase implements BookSeatsInterface {
   private bookingRepository: BookingRepositoryInterface;

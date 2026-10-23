@@ -1,4 +1,4 @@
-import {Booking} from '../../domain/models/types/types'
+import { BookingType as Booking } from '../../domain/utils/models';
 import BookingRepositoryPort from '../../application/ports/out/BookingRepositoryInterface';
 import JsonDatabaseInterface from '../../application/ports/in/JsonDatabaseInterface';
 

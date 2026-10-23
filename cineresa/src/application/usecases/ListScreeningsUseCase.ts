@@ -1,11 +1,11 @@
-import { BookingStatus } from "../../domain/models/types/types";
+import { BookingStatusEnum as BookingStatus } from "../../domain/utils/enums";
 import ListScreeningsInterface from "../ports/in/ListScreeningsInterface";
 import BookingRepositoryInterface from "../ports/out/BookingRepositoryInterface";
 import ScreeningRepositoryInterface from "../ports/out/ScreeningRepositoryInterface";
 import ClockInterface from "../ports/out/ClockInterface";
 import ScreeningView from "../dto/ScreeningView";
 
-class ListScreeningsUseCase implements ListScreeningsUseCase {
+class ListScreeningsUseCase implements ListScreeningsInterface {
   private bookingRepository: BookingRepositoryInterface;
   private screeningRepository: ScreeningRepositoryInterface;
   private clock: ClockInterface;

@@ -1,12 +1,4 @@
-/*
-        "id": "s1",
-        "movie": "Dune: Part Three",
-        "room": "Salle 1",
-        "startsAt": "2026-10-20T10:28:03.002Z",
-        "price": 1150,
-        "remaining": 120
-*/
-class Screening {
+export class ScreeningType {
     public id: string;
     public movie: string;
     public room: string;
@@ -49,10 +41,10 @@ class Screening {
         };
     }
 
-    public static fromJSON(json: string): Screening{
+    public static fromJSON(json: string): ScreeningType{
         const data = JSON.parse(json);
-        return new Screening(
-            data.id,
+        return new ScreeningType(
+        data.id,
             data.movie,
             data.room,
             data.seats, 
@@ -63,5 +55,3 @@ class Screening {
         );
     }
 }
-
-export default Screening;

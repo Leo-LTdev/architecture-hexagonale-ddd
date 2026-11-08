@@ -1,7 +1,7 @@
 import { Booking } from "../../../domain/models/types/types";
 
-interface CancelBookingUseCase {
+interface CancelBookingInterface {
   execute(bookingId: string): Booking;
 }
 
-export default CancelBookingUseCase;
+export default CancelBookingInterface;

@@ -1,4 +1,4 @@
-import { Booking } from "../../models/types/types";
+import { Booking } from "../../../domain/models/types/types";
 
 interface BookingRepositoryInterface {
   ReadDb(): Booking[];

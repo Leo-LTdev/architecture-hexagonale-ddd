@@ -1,9 +1,9 @@
 import { Screening } from "../../../domain/models/types/types";
 
-interface ScreeningRepository {
+interface ScreeningRepositoryInterface {
   ReadDb(): Screening[];
 
   WriteDb(data: Screening[]): void;
 }
 
-export default ScreeningRepository;
+export default ScreeningRepositoryInterface;

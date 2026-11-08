@@ -1,26 +1,13 @@
-/*
-      id: "b" + Date.now(),
-      screeningId: s.id,
-      email: email,
-      seats: seats,
-      tariff: data.body.tariff === "STUDENT" ? "STUDENT" : "NORMAL",
-      total: total,
-      status: "CONFIRMED",
-      createdAt: new Date().toISOString(),
+import { TariffPolicyEnum, BookingStatusEnum } from "../../utils/enums";
 
-*/
-
-import TarifPolicy from "../TarifPolicy";
-import BookingStatus from "../BookingStatus";
-
-class Booking {
+export class BookingType {
     public id: string;
     public screeningId: string;
     public email:string;
     public seats: number;
-    public tariff: TarifPolicy;
+    public tariff: TariffPolicyEnum;
     public total: number;
-    public status: BookingStatus;
+    public status: BookingStatusEnum;
     public createdAt: string;
     public updatedAt?: string;
     public cancelledAt?: string;
@@ -30,9 +17,9 @@ class Booking {
         screeningId: string,
         email: string,
         seats: number,
-        tariff: TarifPolicy,
+        tariff: TariffPolicyEnum,
         total: number,
-        status: BookingStatus,
+        status: BookingStatusEnum,
         createdAt: string,
         updatedAt?: string,
         cancelledAt?: string
@@ -64,9 +51,9 @@ class Booking {
         };
     }
 
-    public static fromJSON(json: string): Booking{
+    public static fromJSON(json: string): BookingType{
         const data = JSON.parse(json);
-        return new Booking(
+        return new BookingType(
             data.id,
             data.screeningId,
             data.email,
@@ -80,5 +67,3 @@ class Booking {
         );
     }
 }
-
-export default Booking;

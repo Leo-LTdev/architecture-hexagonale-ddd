@@ -1,4 +1,4 @@
-import { HTTPExceptionInterface } from "../interfaces/Interfaces";
+import HTTPExceptionInterface from "../../application/ports/out/HTTPExceptionInterface";
 class HTTPException extends Error implements HTTPExceptionInterface {
   override cause: number;
 

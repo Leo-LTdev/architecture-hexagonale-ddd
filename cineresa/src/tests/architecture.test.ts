@@ -29,8 +29,14 @@ function layerOf(file: string): Layer {
   return top === "domain" || top === "application" || top === "adapters" ? top : "root";
 }
 
+// Alias déclarés dans tsconfig.json (compilerOptions.paths) : "@domain/x" → "src/domain/x"
+const ALIAS = /^@(domain|application|adapters)\//;
+const isInternal = (spec: string) => spec.startsWith(".") || ALIAS.test(spec);
+
 function resolveImport(fromFile: string, spec: string): string {
-  const abs = path.resolve(path.dirname(path.join(SRC, fromFile)), spec);
+  const abs = ALIAS.test(spec)
+    ? path.join(SRC, spec.slice(1))
+    : path.resolve(path.dirname(path.join(SRC, fromFile)), spec);
   const candidates = [abs, `${abs}.ts`, path.join(abs, "index.ts")];
   const found = candidates.find((c) => fs.existsSync(c) && fs.statSync(c).isFile()) ?? `${abs}.ts`;
   return path.relative(SRC, found).split(path.sep).join("/");
@@ -44,8 +50,8 @@ function parse(absFile: string): SourceFile {
   return {
     file,
     layer: layerOf(file),
-    imports: specs.filter((s) => s.startsWith(".")).map((s) => resolveImport(file, s)),
-    packages: specs.filter((s) => !s.startsWith(".")).map((s) => s.replace(/^node:/, "")),
+    imports: specs.filter(isInternal).map((s) => resolveImport(file, s)),
+    packages: specs.filter((s) => !isInternal(s)).map((s) => s.replace(/^node:/, "")),
   };
 }
 

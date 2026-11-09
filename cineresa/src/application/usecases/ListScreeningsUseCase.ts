@@ -1,41 +1,31 @@
-import { BookingStatusEnum as BookingStatus } from "../../domain/utils/enums";
-import ListScreeningsInterface from "../ports/in/ListScreeningsInterface";
-import BookingRepositoryInterface from "../ports/out/BookingRepositoryInterface";
-import ScreeningRepositoryInterface from "../ports/out/ScreeningRepositoryInterface";
-import ClockInterface from "../ports/out/ClockInterface";
-import ScreeningView from "../dto/ScreeningView";
+import { DateTime } from "@domain/models/ValueObject/DateTime";
+import ListScreeningsInterface from "@application/ports/in/ListScreeningsInterface";
+import BookingRepositoryInterface from "@application/ports/out/BookingRepositoryInterface";
+import ScreeningRepositoryInterface from "@application/ports/out/ScreeningRepositoryInterface";
+import ClockInterface from "@application/ports/out/ClockInterface";
+import ScreeningView from "@application/dto/ScreeningView";
 
 class ListScreeningsUseCase implements ListScreeningsInterface {
-  private bookingRepository: BookingRepositoryInterface;
-  private screeningRepository: ScreeningRepositoryInterface;
-  private clock: ClockInterface;
+  public constructor(
+    private readonly bookingRepository: BookingRepositoryInterface,
+    private readonly screeningRepository: ScreeningRepositoryInterface,
+    private readonly clock: ClockInterface,
+  ) {}
 
-  public constructor(bookingRepository: BookingRepositoryInterface, 
-    screeningRepository: ScreeningRepositoryInterface, 
-    clock: ClockInterface) {
-    this.bookingRepository = bookingRepository;
-    this.screeningRepository = screeningRepository;
-    this.clock = clock;
-  }
-
+  // GET /screenings : séances à venir avec le nombre de places restantes
   public execute(): ScreeningView[] {
-    // ---------------------------------------------------------------------------
-    // GET /screenings : liste des séances à venir avec le nombre de places restantes
-    // ---------------------------------------------------------------------------
-    const now = this.clock.now();
+    const now = DateTime.create(this.clock.now());
     const bookings = this.bookingRepository.ReadDb();
 
-    //Get upcoming screenings
-    const screenings = this.screeningRepository.ReadDb().filter((s) => new Date(s.startsAt) >= now);
-
-    return screenings.map((s) => {
-      //Get bookings for this screening and status confirmed
-      const taken = bookings
-        .filter((b) => b.screeningId == s.id && b.status == BookingStatus.CONFIRMED)
-        .reduce((sum, b) => sum + b.seats, 0);
-
-      return new ScreeningView(s, s.capacity - taken);
-    });
+    return this.screeningRepository
+      .ReadDb()
+      .filter((s) => !s.startsAt.isBefore(now))
+      .map((s) => {
+        const bookedSeats = bookings
+          .filter((b) => b.screeningId === s.id && b.isConfirmed())
+          .reduce((sum, b) => sum + b.seats.value, 0);
+        return new ScreeningView(s, s.remainingSeats(bookedSeats));
+      });
   }
 }
 

@@ -1,16 +1,16 @@
 import express from 'express';
-import JsonDatabase from "./adapters/data/JsonDatabase";
-import ScreeningRepository from "./adapters/data/ScreeningRepository";
-import BookingRepository from "./adapters/data/BookingRepository";
-import SystemClock from './adapters/clock/SystemClock';
-import TimestampIdGenerator from './adapters/id/TimestampIdGenerator';
-import ConsoleNotifier from './adapters/notification/ConsoleNotifier';
-import FakePaymentGateway from './adapters/payment/FakePaymentGateway';
-import { RoutesController } from './adapters/http/routes';
-import BookSeatsUseCase from './application/usecases/BookSeatsUseCase';
-import { ListUserBookingsUseCase } from './application/usecases/ListUserBookingsUseCase';
-import CancelBookingUseCase from './application/usecases/CancelBookingUseCase';
-import ListScreeningsUseCase from './application/usecases/ListScreeningsUseCase';
+import JsonDatabase from "@adapters/data/JsonDatabase";
+import ScreeningRepository from "@adapters/data/ScreeningRepository";
+import BookingRepository from "@adapters/data/BookingRepository";
+import SystemClock from "@adapters/clock/SystemClock";
+import TimestampIdGenerator from "@adapters/id/TimestampIdGenerator";
+import ConsoleNotifier from "@adapters/notification/ConsoleNotifier";
+import FakePaymentGateway from "@adapters/payment/FakePaymentGateway";
+import { RoutesController } from "@adapters/http/routes";
+import BookSeatsUseCase from "@application/usecases/BookSeatsUseCase";
+import { ListUserBookingsUseCase } from "@application/usecases/ListUserBookingsUseCase";
+import CancelBookingUseCase from "@application/usecases/CancelBookingUseCase";
+import ListScreeningsUseCase from "@application/usecases/ListScreeningsUseCase";
 
 const app = express();
 app.use(express.json());

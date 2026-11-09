@@ -1,5 +1,5 @@
-import { Booking } from "../../../domain/models/types/types";
-import BookSeatsCommand from "../../dto/BookSeatsCommand";
+import { Booking } from "@domain/models/Entity/Booking";
+import BookSeatsCommand from "@application/dto/BookSeatsCommand";
 
 interface BookSeatsInterface {
   execute(command: BookSeatsCommand): Booking;

@@ -1,37 +1,21 @@
-import TarifPolicy from "../models/Enums/TariffPolicyEnum";
-import TarifRules from "../models/Enums/TariffRulesEnum";
+import { TariffPolicyEnum } from "@domain/models/Enums/TariffPolicyEnum";
+import { TariffRulesEnum } from "@domain/models/Enums/TariffRulesEnum";
+import { Seats } from "@domain/models/ValueObject/Seats";
+import { Tariff } from "@domain/models/ValueObject/Tariff";
 
+// Fonction pure de calcul du prix (centimes). Le nombre de places n'est pas
+// validé ici : c'est le rôle du VO Seats lors d'une réservation.
 function calculate(
-    basePrice: number,
-    seats: number,
-    requestedTariff?: TarifPolicy | string,
-  ): { tariff: TarifPolicy; total: number } {
-    const tariff = Object.values(TarifPolicy).includes(
-      requestedTariff as TarifPolicy,
-    )
-      ? (requestedTariff as TarifPolicy)
-      : TarifPolicy.NORMAL;
+  basePrice: number,
+  seats: number,
+  requestedTariff?: TariffPolicyEnum | string,
+): { tariff: TariffPolicyEnum; total: number } {
+  const tariff = Tariff.create(requestedTariff);
 
-    let unit = basePrice;
+  let total = tariff.unitPrice(basePrice) * seats;
+  if (seats >= Seats.GROUP_THRESHOLD) total = Math.round(total * TariffRulesEnum.UPFOR);
 
-    switch (tariff) {
-      case TarifPolicy.CHILD:
-        unit = Math.round(unit * TarifRules.CHILD);
-        break;
-      case TarifPolicy.STUDENT:
-        unit = Math.round(unit * TarifRules.STUDENT);
-        break;
-      case TarifPolicy.SENIOR:
-        unit = Math.round(unit * TarifRules.SENIOR);
-        break;
-      default:
-        unit = Math.round(unit * TarifRules.NORMAL);
-    }
-
-    let total = unit * seats;
-    if (seats >= 4) total = Math.round(total * TarifRules.UPFOR);
-
-    return { tariff, total };
-  }
+  return { tariff: tariff.value, total };
+}
 
 export default calculate;

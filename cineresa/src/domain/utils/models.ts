@@ -1,5 +1,5 @@
-import {BookingType} from "../models/types/BookingType";
-import {ScreeningType} from "../models/types/ScreeningType";
-import User from "../models/types/User";
+import { Booking } from "@domain/models/Entity/Booking";
+import { Screening } from "@domain/models/Entity/Screening";
+import User from "@domain/models/types/User";
 
-export { BookingType, ScreeningType, User };
+export { Booking, Screening, User };

@@ -1,7 +1,7 @@
-import { ErrorStatus } from "../models/Enums/ErrorStatusEnum";
+import { ErrorStatusEnum } from "@domain/models/Enums/ErrorStatusEnum";
 
-class DomainError extends Error{
-  constructor(message: ErrorStatus) {
+class DomainError extends Error {
+  constructor(message: ErrorStatusEnum) {
     super(message);
     this.name = new.target.name;
   }

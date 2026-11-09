@@ -7,12 +7,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "types": ["node"],
-    "paths": {
-      "@domain/*": ["./src/domain/*"],
-      "@application/*": ["./src/application/*"],
-      "@adapters/*": ["./src/adapters/*"]
-    }
+    "types": ["node"]
   },
   "include": ["src", "scripts", "test"]
 }

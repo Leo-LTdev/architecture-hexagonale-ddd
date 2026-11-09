@@ -1,0 +1,105 @@
+@startuml composants-reservation
+title Comment les composants du contexte Réservation dépendent-ils du cœur ?
+skinparam componentStyle uml2
+left to right direction
+
+package "adapters/in/http" {
+  [createRouter + domainErrorHandler] as HTTP
+}
+
+package "application" {
+  interface BookSeats
+  interface CancelBooking
+  interface ListUpcomingScreenings
+  interface ListMyBookings
+
+  [BookSeatsService]
+  [CancelBookingService]
+  [ListUpcomingScreeningsService]
+  [ListMyBookingsService]
+  [NotifyCustomer]
+
+  interface ScreeningRepository
+  interface PaymentGateway
+  interface EventPublisher
+  interface Notifier
+  interface Clock
+  interface IdGenerator
+}
+
+package "domain" {
+  [Screening] as AGG
+  [Booking]
+  [PricingPolicy]
+  [SeatCount]
+  [Tariff]
+  [events]
+  [Money]
+  [Email]
+  [DomainError]
+  [DomainEvent]
+}
+
+package "adapters/out" {
+  [InMemoryScreeningRepository]
+  [FakePaymentGateway]
+  [InMemoryEventBus]
+  [ConsoleNotifier]
+  [SystemClock]
+  [UuidGenerator]
+}
+
+HTTP ..> BookSeats
+HTTP ..> CancelBooking
+HTTP ..> ListUpcomingScreenings
+HTTP ..> ListMyBookings
+HTTP ..> DomainError
+
+BookSeats - [BookSeatsService]
+CancelBooking - [CancelBookingService]
+ListUpcomingScreenings - [ListUpcomingScreeningsService]
+ListMyBookings - [ListMyBookingsService]
+
+[BookSeatsService] ..> ScreeningRepository
+[BookSeatsService] ..> PaymentGateway
+[BookSeatsService] ..> EventPublisher
+[BookSeatsService] ..> Clock
+[BookSeatsService] ..> IdGenerator
+[CancelBookingService] ..> ScreeningRepository
+[CancelBookingService] ..> EventPublisher
+[CancelBookingService] ..> Clock
+[ListUpcomingScreeningsService] ..> ScreeningRepository
+[ListUpcomingScreeningsService] ..> Clock
+[ListMyBookingsService] ..> ScreeningRepository
+[NotifyCustomer] ..> Notifier
+[NotifyCustomer] ..> events
+
+[InMemoryScreeningRepository] -up- ScreeningRepository
+[FakePaymentGateway] -up- PaymentGateway
+[InMemoryEventBus] -up- EventPublisher
+[ConsoleNotifier] -up- Notifier
+[SystemClock] -up- Clock
+[UuidGenerator] -up- IdGenerator
+
+[BookSeatsService] ..> AGG
+[CancelBookingService] ..> AGG
+[ListUpcomingScreeningsService] ..> AGG
+[ListMyBookingsService] ..> AGG
+ScreeningRepository ..> AGG
+
+AGG ..> [Booking]
+AGG ..> [PricingPolicy]
+AGG ..> [SeatCount]
+AGG ..> [Tariff]
+AGG ..> [events]
+AGG ..> [Money]
+AGG ..> [Email]
+AGG ..> [DomainError]
+[events] ..> [DomainEvent]
+
+legend bottom
+  Flèche pointillée : dépendance de code, toujours vers le cœur.
+  Trait plein vers une interface : le composant réalise ce port.
+  src/container.ts (composition root) instancie et relie ces composants.
+endlegend
+@enduml

@@ -15,8 +15,7 @@ API de réservation de places de cinéma, refactorée d'un code legacy monolithi
 npm install
 npm run seed         # (re)génère data/db.json
 npm start            # persistance en mémoire — http://localhost:3000
-npm run start:json   # persistance dans data/db.json
-npm test             # tests unitaires, contrat, HTTP, architecture
+npm test             # tests unitaires, HTTP, architecture
 npm run typecheck
 ```
 
@@ -35,8 +34,8 @@ src/
 │   └── dto/         commande et vues renvoyées (les objets du domaine ne sortent pas)
 ├── adapters/
 │   ├── in/http/     routes Express + traduction DomainError -> statut HTTP
-│   └── out/         persistence (mémoire, JSON), payment, events, notification, system
-├── container.ts     composition root : buildApp(adapters), adaptersFromConfig()
+│   └── out/         persistence (mémoire), payment, events, notification, system
+├── container.ts     composition root : buildApp(adapters), defaultAdapters()
 └── main.ts          démarre le serveur
 test/                tests Vitest (aucun ne démarre de serveur réel ni n'écrit dans data/db.json)
 docs/                DAT, diagrammes PlantUML, ADR
@@ -45,4 +44,4 @@ docs/                DAT, diagrammes PlantUML, ADR
 ## Documentation
 
 - [Document d'architecture technique](docs/DAT.md)
-- [ADR-001 — Booking dans l'agrégat Screening](docs/001-booking-dans-agregat-screening.md)
+- [ADR-001 — Booking dans l'agrégat Screening](docs/adr/001-booking-dans-agregat-screening.md)

@@ -1,0 +1,33 @@
+@startuml sequence-reservation-refusee
+title Que se passe-t-il quand une réservation est refusée ?
+
+actor Client
+participant "createRouter\n+ domainErrorHandler" as HTTP
+participant BookSeatsService as UC
+participant ScreeningRepository as REPO
+participant "Screening\n(racine d'agrégat)" as AGG
+participant PaymentGateway as PAY
+
+Client -> HTTP : POST /screenings/s1/bookings
+HTTP -> UC : execute(command)
+UC -> REPO : findById("s1")
+REPO --> UC : screening
+UC -> AGG : book({ bookingId, email, seats, tariff, now })
+
+alt Plus assez de places
+  AGG --> UC : DomainError(CONFLICT)
+  UC --> HTTP : DomainError(CONFLICT)
+  HTTP --> Client : 409 { error: "Plus assez de places" }
+else Places disponibles
+  AGG --> UC : booking
+  UC -> PAY : charge(email, total)
+  PAY --> UC : false
+  UC --> HTTP : DomainError(PAYMENT_REFUSED)
+  HTTP --> Client : 402 { error: "Paiement refusé" }
+end
+
+legend bottom
+  Dans les deux cas, ni ScreeningRepository.save ni EventPublisher.publish ne sont appelés :
+  la réservation n'est pas enregistrée et aucun e-mail n'est envoyé.
+endlegend
+@enduml

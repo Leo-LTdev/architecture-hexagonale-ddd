@@ -1,6 +1,7 @@
 import { describe, test, expect } from "vitest";
-import { TarifPolicy, TarifRules } from "../models/types/types";
-import calculate from "../utils/PriceCalculator";
+import { TariffPolicyEnum as TarifPolicy } from "@domain/models/Enums/TariffPolicyEnum";
+import { TariffRulesEnum as TarifRules } from "@domain/models/Enums/TariffRulesEnum";
+import calculate from "@domain/utils/PriceCalculator";
 
 // Test unitaire
 test("Calcule correctement le prix avec tarif étudiant et remise dès 4 places.", () => {

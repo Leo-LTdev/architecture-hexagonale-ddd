@@ -1,5 +1,5 @@
-import ValidationError from "../../errors/ValidationError";
-import { ErrorStatusEnum } from "../Enums/ErrorStatusEnum";
+import ValidationError from "@domain/errors/ValidationError";
+import { ErrorStatusEnum } from "@domain/models/Enums/ErrorStatusEnum";
 
 export class Seats {
     static readonly MIN = 1;

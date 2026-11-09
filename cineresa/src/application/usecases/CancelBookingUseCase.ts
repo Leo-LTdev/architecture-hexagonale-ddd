@@ -1,65 +1,39 @@
-import { DomainError } from "../../domain/errors/errors";
-import { BookingType as Booking } from "../../domain/utils/models";
-import { BookingStatusEnum as BookingStatus } from "../../domain/utils/enums";
-import CancelBookingInterface from "../ports/in/CancelBookingInterface";
-import BookingRepositoryInterface from "../ports/out/BookingRepositoryInterface";
-import ScreeningRepositoryInterface from "../ports/out/ScreeningRepositoryInterface";
-import NotifierInterface from "../ports/out/NotifierInterface";
-import ClockInterface from "../ports/out/ClockInterface";
-import { ErrorStatusEnum as ErrorStatus } from "../../domain/models/Enums/ErrorStatusEnum";
+import { NotFoundError } from "@domain/errors/errors";
+import { ErrorStatusEnum } from "@domain/models/Enums/ErrorStatusEnum";
+import { Booking } from "@domain/models/Entity/Booking";
+import { DateTime } from "@domain/models/ValueObject/DateTime";
+import CancelBookingInterface from "@application/ports/in/CancelBookingInterface";
+import BookingRepositoryInterface from "@application/ports/out/BookingRepositoryInterface";
+import ScreeningRepositoryInterface from "@application/ports/out/ScreeningRepositoryInterface";
+import NotifierInterface from "@application/ports/out/NotifierInterface";
+import ClockInterface from "@application/ports/out/ClockInterface";
 
 class CancelBookingUseCase implements CancelBookingInterface {
-  private bookingRepository: BookingRepositoryInterface;
-  private screeningRepository: ScreeningRepositoryInterface;
-  private notifier: NotifierInterface;
-  private clock: ClockInterface;
-
   public constructor(
-    bookingRepository: BookingRepositoryInterface,
-    screeningRepository: ScreeningRepositoryInterface,
-    notifier: NotifierInterface,
-    clock: ClockInterface,
-  ) {
-    this.bookingRepository = bookingRepository;
-    this.screeningRepository = screeningRepository;
-    this.notifier = notifier;
-    this.clock = clock;
-  }
+    private readonly bookingRepository: BookingRepositoryInterface,
+    private readonly screeningRepository: ScreeningRepositoryInterface,
+    private readonly notifier: NotifierInterface,
+    private readonly clock: ClockInterface,
+  ) {}
 
+  // DELETE /bookings/:id : annulation possible jusqu'à 2h avant la séance
   public execute(bookingId: string): Booking {
-    // ---------------------------------------------------------------------------
-    // DELETE /bookings/:id : annuler (possible jusqu'à 2h avant la séance)
-    // ---------------------------------------------------------------------------
     const bookings = this.bookingRepository.ReadDb();
+    const booking = bookings.find((b) => b.id === bookingId);
+    if (!booking) throw new NotFoundError(ErrorStatusEnum.NOT_FOUND);
 
-    //Get booking by id
-    const booking = bookings.find((b) => b.id == bookingId);
-
-    if (!booking)
-      throw new DomainError(ErrorStatus.NOT_FOUND)
-    if (booking.status == BookingStatus.CANCELLED)
-      throw new DomainError(ErrorStatus.CONFLICT)
-
-    //Get screening of this booking
     const screening = this.screeningRepository
       .ReadDb()
-      .find((s) => s.id == booking.screeningId);
+      .find((s) => s.id === booking.screeningId);
+    if (!screening) throw new NotFoundError(ErrorStatusEnum.NOT_FOUND);
 
-    if (!screening)
-      throw new DomainError(ErrorStatus.NOT_FOUND)
-
-    const diff = new Date(screening.startsAt).getTime() - this.clock.now().getTime();
-    if (diff < 2 * 60 * 60 * 1000) {
-      throw new DomainError(ErrorStatus.INVALID)
-    }
-
-    booking.status = BookingStatus.CANCELLED;
-    booking.cancelledAt = this.clock.now().toISOString();
+    // L'entité vérifie "déjà annulée" et "moins de 2h".
+    booking.cancel(screening, DateTime.create(this.clock.now()));
     this.bookingRepository.WriteDb(bookings);
 
     this.notifier.notify(
-      booking.email,
-      `Votre réservation ${booking.id} a été annulée. Remboursement : ${(booking.total / 100).toFixed(2)} €`,
+      booking.email.value,
+      `Votre réservation ${booking.id} a été annulée. Remboursement : ${booking.total.toEuros()} €`,
     );
 
     return booking;

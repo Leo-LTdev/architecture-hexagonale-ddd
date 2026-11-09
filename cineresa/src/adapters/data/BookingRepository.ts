@@ -1,24 +1,19 @@
-import { BookingType as Booking } from '../../domain/utils/models';
-import BookingRepositoryPort from '../../application/ports/out/BookingRepositoryInterface';
-import JsonDatabaseInterface from '../../application/ports/in/JsonDatabaseInterface';
+import { Booking, BookingPrimitives } from "@domain/models/Entity/Booking";
+import BookingRepositoryPort from "@application/ports/out/BookingRepositoryInterface";
+import JsonDatabaseInterface from "@application/ports/in/JsonDatabaseInterface";
 
-
-class BookingRepository implements BookingRepositoryPort{
-    private jsonDatabase: JsonDatabaseInterface;
-
-    public constructor(jsonDatabase: JsonDatabaseInterface) {
-        this.jsonDatabase = jsonDatabase;
-    }
+// Traduit JSON <-> Entity Booking.
+class BookingRepository implements BookingRepositoryPort {
+    public constructor(private readonly jsonDatabase: JsonDatabaseInterface) {}
 
     public ReadDb(): Booking[] {
         const data = this.jsonDatabase.readDb();
-        const result = data.bookings.map((b: any) => Booking.fromJSON(JSON.stringify(b)));
-        return result;
+        return data.bookings.map((b: BookingPrimitives) => Booking.restore(b));
     }
 
-    public WriteDb(data: Booking[]): void{
+    public WriteDb(data: Booking[]): void {
         const db = this.jsonDatabase.readDb();
-        db.bookings = data;
+        db.bookings = data.map((b) => b.toJSON());
         this.jsonDatabase.writeDb(db);
     }
 }

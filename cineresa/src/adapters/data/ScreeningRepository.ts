@@ -1,21 +1,19 @@
-import JsonDatabaseInterface from '../../application/ports/in/JsonDatabaseInterface';
-import ScreeningRepositoryPort from '../../application/ports/out/ScreeningRepositoryInterface';
-import { ScreeningType as Screening } from '../../domain/utils/models';
-class ScreeningRepository implements ScreeningRepositoryPort{
-    private jsonDatabase: JsonDatabaseInterface
-    public constructor(jsonDatabase: JsonDatabaseInterface){
-        this.jsonDatabase = jsonDatabase;
-    }
+import { Screening, ScreeningPrimitives } from "@domain/models/Entity/Screening";
+import ScreeningRepositoryPort from "@application/ports/out/ScreeningRepositoryInterface";
+import JsonDatabaseInterface from "@application/ports/in/JsonDatabaseInterface";
+
+// Traduit JSON <-> Entity Screening.
+class ScreeningRepository implements ScreeningRepositoryPort {
+    public constructor(private readonly jsonDatabase: JsonDatabaseInterface) {}
 
     public ReadDb(): Screening[] {
         const data = this.jsonDatabase.readDb();
-        const result = data.screenings.map((s: any) => Screening.fromJSON(JSON.stringify(s)));
-        return result;
+        return data.screenings.map((s: ScreeningPrimitives) => Screening.restore(s));
     }
 
-    public WriteDb(data: Screening[]): void{
+    public WriteDb(data: Screening[]): void {
         const db = this.jsonDatabase.readDb();
-        db.screenings = data;
+        db.screenings = data.map((s) => s.toJSON());
         this.jsonDatabase.writeDb(db);
     }
 }

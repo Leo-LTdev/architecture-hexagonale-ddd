@@ -1,4 +1,4 @@
-import { Screening } from "../../../domain/models/types/types";
+import { Screening } from "@domain/models/Entity/Screening";
 
 interface ScreeningRepositoryInterface {
   ReadDb(): Screening[];

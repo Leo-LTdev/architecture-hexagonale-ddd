@@ -1,5 +1,5 @@
-import ValidationError from "../../errors/ValidationError";
-import { ErrorStatusEnum } from "../Enums/ErrorStatusEnum";
+import ValidationError from "@domain/errors/ValidationError";
+import { ErrorStatusEnum } from "@domain/models/Enums/ErrorStatusEnum";
 
 const EMAIL_REGEX = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 

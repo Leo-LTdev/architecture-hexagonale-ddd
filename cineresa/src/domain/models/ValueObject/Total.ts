@@ -1,6 +1,6 @@
-import ValidationError from "../../errors/ValidationError";
-import { ErrorStatusEnum } from "../Enums/ErrorStatusEnum";
-import { TariffRulesEnum } from "../Enums/TariffRulesEnum";
+import ValidationError from "@domain/errors/ValidationError";
+import { ErrorStatusEnum } from "@domain/models/Enums/ErrorStatusEnum";
+import { TariffRulesEnum } from "@domain/models/Enums/TariffRulesEnum";
 import { Seats } from "./Seats";
 import { Tariff } from "./Tariff";
 

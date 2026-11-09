@@ -1,5 +1,5 @@
-import { TariffPolicyEnum } from "../Enums/TariffPolicyEnum";
-import { TariffRulesEnum } from "../Enums/TariffRulesEnum";
+import { TariffPolicyEnum } from "@domain/models/Enums/TariffPolicyEnum";
+import { TariffRulesEnum } from "@domain/models/Enums/TariffRulesEnum";
 
 export class Tariff {
     private constructor(

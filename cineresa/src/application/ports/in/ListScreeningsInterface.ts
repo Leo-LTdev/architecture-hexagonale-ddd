@@ -1,4 +1,4 @@
-import ScreeningView from "../../dto/ScreeningView";
+import ScreeningView from "@application/dto/ScreeningView";
 
 interface ListScreeningsInterface {
   execute(): ScreeningView[];

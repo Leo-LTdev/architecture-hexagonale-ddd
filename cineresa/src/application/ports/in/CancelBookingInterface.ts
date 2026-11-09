@@ -1,4 +1,4 @@
-import { Booking } from "../../../domain/models/types/types";
+import { Booking } from "@domain/models/Entity/Booking";
 
 interface CancelBookingInterface {
   execute(bookingId: string): Booking;

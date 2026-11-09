@@ -1,4 +1,4 @@
-import BookingDetailsView from "../../dto/BookingDetailsView";
+import BookingDetailsView from "@application/dto/BookingDetailsView";
 
 interface ListUserBookingsInterface {
   execute(email: string): BookingDetailsView[];

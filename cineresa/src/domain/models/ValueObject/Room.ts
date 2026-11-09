@@ -1,23 +1,25 @@
-import ValidationError from "../../errors/ValidationError";
-import { ErrorStatusEnum } from "../Enums/ErrorStatusEnum";
+import ValidationError from "@domain/errors/ValidationError";
+import { ErrorStatusEnum } from "@domain/models/Enums/ErrorStatusEnum";
 
-export class Room{
-    static readonly MIN_ROOMS = 1;
-    static readonly MAX_ROOMS = 20;
-    private constructor(
-        public readonly number: number,
-        public readonly stage: number,
-        public readonly type: string
-    ){}
+// Nom de la salle, ex. "Salle 1"
+export class Room {
+    static readonly MAX_LENGTH = 50;
 
-    static create(props: {number: number, stage: number, type: string}): Room{
-        if(props.number > this.MAX_ROOMS || props.number < this.MIN_ROOMS){
+    private constructor(public readonly value: string) {}
+
+    static create(name: string): Room {
+        const value = name?.trim() ?? "";
+        if (!value || value.length > Room.MAX_LENGTH) {
             throw new ValidationError(ErrorStatusEnum.INVALID);
         }
-        return new Room(props.number, props.stage, props.type)
+        return new Room(value);
     }
 
-    toString(): string{
-        return ''.concat(this.stage.toString(), this.number.toString(), " ", this.type)
+    equals(other: Room): boolean {
+        return this.value === other.value;
+    }
+
+    toString(): string {
+        return this.value;
     }
 }

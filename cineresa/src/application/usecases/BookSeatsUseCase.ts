@@ -1,107 +1,69 @@
-import { DomainError } from "../../domain/errors/errors";
-import { BookingType as Booking} from "../../domain/utils/models";
-import calculate from "../../domain/utils/PriceCalculator";
-import BookSeatsInterface from "../ports/in/BookSeatsInterface";
-import BookingRepositoryInterface from "../ports/out/BookingRepositoryInterface";
-import ScreeningRepositoryInterface from "../ports/out/ScreeningRepositoryInterface";
-import PaymentGatewayInterface from "../ports/out/PaymentGatewayInterface";
-import NotifierInterface from "../ports/out/NotifierInterface";
-import ClockInterface from "../ports/out/ClockInterface";
-import IdGeneratorInterface from "../ports/out/IdGeneratorInterface";
-import BookSeatsCommand from "../dto/BookSeatsCommand";
-import { ErrorStatusEnum as ErrorStatus } from "../../domain/models/Enums/ErrorStatusEnum";
-import { BookingStatusEnum as BookingStatus } from "../../domain/utils/enums";
+import { NotFoundError, PaymentRefusedError } from "@domain/errors/errors";
+import { ErrorStatusEnum } from "@domain/models/Enums/ErrorStatusEnum";
+import { Booking } from "@domain/models/Entity/Booking";
+import { DateTime } from "@domain/models/ValueObject/DateTime";
+import { Email } from "@domain/models/ValueObject/Email";
+import { Seats } from "@domain/models/ValueObject/Seats";
+import { Tariff } from "@domain/models/ValueObject/Tariff";
+import BookSeatsInterface from "@application/ports/in/BookSeatsInterface";
+import BookingRepositoryInterface from "@application/ports/out/BookingRepositoryInterface";
+import ScreeningRepositoryInterface from "@application/ports/out/ScreeningRepositoryInterface";
+import PaymentGatewayInterface from "@application/ports/out/PaymentGatewayInterface";
+import NotifierInterface from "@application/ports/out/NotifierInterface";
+import ClockInterface from "@application/ports/out/ClockInterface";
+import IdGeneratorInterface from "@application/ports/out/IdGeneratorInterface";
+import BookSeatsCommand from "@application/dto/BookSeatsCommand";
 
 class BookSeatsUseCase implements BookSeatsInterface {
-  private bookingRepository: BookingRepositoryInterface;
-  private screeningRepository: ScreeningRepositoryInterface;
-  private paymentGateway: PaymentGatewayInterface;
-  private notifier: NotifierInterface;
-  private clock: ClockInterface;
-  private idGenerator: IdGeneratorInterface;
-
   public constructor(
-    bookingRepository: BookingRepositoryInterface,
-    screeningRepository: ScreeningRepositoryInterface,
-    paymentGateway: PaymentGatewayInterface,
-    notifier: NotifierInterface,
-    clock: ClockInterface,
-    idGenerator: IdGeneratorInterface,
-  ) {
-    this.bookingRepository = bookingRepository;
-    this.screeningRepository = screeningRepository;
-    this.paymentGateway = paymentGateway;
-    this.notifier = notifier;
-    this.clock = clock;
-    this.idGenerator = idGenerator;
-  }
+    private readonly bookingRepository: BookingRepositoryInterface,
+    private readonly screeningRepository: ScreeningRepositoryInterface,
+    private readonly paymentGateway: PaymentGatewayInterface,
+    private readonly notifier: NotifierInterface,
+    private readonly clock: ClockInterface,
+    private readonly idGenerator: IdGeneratorInterface,
+  ) {}
 
+  // POST /screenings/:id/bookings
   public execute(command: BookSeatsCommand): Booking {
-    // ---------------------------------------------------------------------------
-    // POST /screenings/:id/bookings : réserver des places
-    // body : { email, seats, tariff: "NORMAL" | "STUDENT" | "SENIOR" | "CHILD" }
-    // ---------------------------------------------------------------------------
-    //Get screening by id
     const screening = this.screeningRepository
       .ReadDb()
-      .find((s) => s.id == command.screeningId);
+      .find((s) => s.id === command.screeningId);
+    if (!screening) throw new NotFoundError(ErrorStatusEnum.NOT_FOUND);
 
-    if (!screening)
-      throw new DomainError(ErrorStatus.NOT_FOUND);
-
-    const email = command.email;
-    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-      throw new DomainError(ErrorStatus.INVALID);
-    }
-
-    const seats = Number(command.seats);
-    if (!Number.isInteger(seats) || seats < 1 || seats > 6) {
-      throw new DomainError(ErrorStatus.INVALID);
-    }
-
-    if (new Date(screening.startsAt) <= this.clock.now()) {
-      throw new DomainError(ErrorStatus.INVALID);
-    }
+    // Les VOs valident les entrées (ValidationError si invalides).
+    const email = Email.create(command.email);
+    const seats = Seats.create(command.seats);
+    const tariff = Tariff.create(command.tariff);
+    const now = DateTime.create(this.clock.now());
 
     const bookings = this.bookingRepository.ReadDb();
+    const bookedSeats = bookings
+      .filter((b) => b.screeningId === screening.id && b.isConfirmed())
+      .reduce((sum, b) => sum + b.seats.value, 0);
 
-    //Get bookings for this screening and status confirmed
-    const taken = bookings
-      .filter(
-        (b) =>
-          b.screeningId == screening.id && b.status == BookingStatus.CONFIRMED,
-      )
-      .reduce((sum, b) => sum + b.seats, 0);
-
-    if (taken + seats > screening.capacity)
-      throw new DomainError(ErrorStatus.INVALID);
-
-    // calcul du prix (en centimes)
-    const { tariff, total } = calculate(screening.price, seats, command.tariff);
-
-    // paiement : appel au prestataire
-    const paid = this.paymentGateway.charge(email, total);
-    if (!paid) throw new DomainError(ErrorStatus.PAYEMENT_REFUSED);
-
-    const booking = new Booking(
-      this.idGenerator.generate(),
-      screening.id,
+    // L'entité applique les règles métier et calcule le total.
+    const booking = Booking.book({
+      id: this.idGenerator.generate(),
+      screening,
       email,
       seats,
       tariff,
-      total,
-      BookingStatus.CONFIRMED,
-      this.clock.now().toISOString(),
-    );
+      now,
+      bookedSeats,
+    });
+
+    if (!this.paymentGateway.charge(email.value, booking.total.value)) {
+      throw new PaymentRefusedError(ErrorStatusEnum.PAYEMENT_REFUSED);
+    }
 
     bookings.push(booking);
     this.bookingRepository.WriteDb(bookings);
 
-    // envoi du mail de confirmation
     this.notifier.notify(
-      email,
-      `Votre réservation ${booking.id} pour "${screening.movie}" ` +
-        `(${seats} place(s), ${(total / 100).toFixed(2)} €) est confirmée.`,
+      email.value,
+      `Votre réservation ${booking.id} pour "${screening.movie.value}" ` +
+        `(${seats.value} place(s), ${booking.total.toEuros()} €) est confirmée.`,
     );
 
     return booking;

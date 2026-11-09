@@ -2,7 +2,7 @@
 { "email": "a@b.fr", "seats": 2, "tariff": "NORMAL" }
 */
 
-import TarifPolicy from "../Enums/TariffPolicyEnum";
+import { TariffPolicyEnum as TarifPolicy } from "@domain/models/Enums/TariffPolicyEnum";
 
 class BookingDto{
     public email: string;

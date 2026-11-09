@@ -1,10 +1,14 @@
-import PaymentGateway from "@application/ports/out/PaymentGatewayInterface";
+import { PaymentGateway } from "@application/ports/out/PaymentGateway";
+import { Email } from "@domain/shared/Email";
+import { Money } from "@domain/shared/Money";
 
-class FakePaymentGateway implements PaymentGateway {
-  // simule un prestataire qui refuse ~5% des paiements
-  public charge(email: string, amount: number): boolean {
-    return Math.random() > 0.05;
+const PAYMENT_FAILURE_RATE = 0.05;
+
+export class FakePaymentGateway implements PaymentGateway {
+  // Par défaut, simule un prestataire qui refuse 5 % des paiements.
+  constructor(private readonly accepts: () => boolean = () => Math.random() > PAYMENT_FAILURE_RATE) {}
+
+  async charge(_email: Email, _amount: Money): Promise<boolean> {
+    return this.accepts();
   }
 }
-
-export default FakePaymentGateway;

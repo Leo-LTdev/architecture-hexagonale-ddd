@@ -1,27 +1,16 @@
-/*
-{ ...booking, "movie": "Dune: Part Three", "startsAt": "2026-10-20T10:28:03.002Z" }
-*/
+import { BookingView, toBookingView } from "@application/dto/BookingView";
+import { Booking } from "@domain/booking/Booking";
+import { Screening } from "@domain/booking/Screening";
 
-import { Booking } from "@domain/models/Entity/Booking";
-
-class BookingDetailsView {
-    public booking: Booking;
-    public movie: string;
-    public startsAt: string | null;
-
-    public constructor(booking: Booking, movie: string, startsAt: string | null) {
-        this.booking = booking;
-        this.movie = movie;
-        this.startsAt = startsAt;
-    }
-
-    public toJSON(): object {
-        return {
-            ...this.booking.toJSON(),
-            movie: this.movie,
-            startsAt: this.startsAt
-        };
-    }
+export interface BookingDetailsView extends BookingView {
+  movie: string;
+  startsAt: string;
 }
 
-export default BookingDetailsView;
+export function toBookingDetailsView(booking: Booking, screening: Screening): BookingDetailsView {
+  return {
+    ...toBookingView(booking),
+    movie: screening.movie,
+    startsAt: screening.startsAt.toISOString(),
+  };
+}

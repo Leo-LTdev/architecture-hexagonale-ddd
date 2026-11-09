@@ -1,54 +1,76 @@
-import express from 'express';
-import JsonDatabase from "@adapters/data/JsonDatabase";
-import ScreeningRepository from "@adapters/data/ScreeningRepository";
-import BookingRepository from "@adapters/data/BookingRepository";
-import SystemClock from "@adapters/clock/SystemClock";
-import TimestampIdGenerator from "@adapters/id/TimestampIdGenerator";
-import ConsoleNotifier from "@adapters/notification/ConsoleNotifier";
-import FakePaymentGateway from "@adapters/payment/FakePaymentGateway";
-import { RoutesController } from "@adapters/http/routes";
-import BookSeatsUseCase from "@application/usecases/BookSeatsUseCase";
-import { ListUserBookingsUseCase } from "@application/usecases/ListUserBookingsUseCase";
-import CancelBookingUseCase from "@application/usecases/CancelBookingUseCase";
-import ListScreeningsUseCase from "@application/usecases/ListScreeningsUseCase";
+import express, { type Express } from "express";
+import { InMemoryEventBus } from "@adapters/out/events/InMemoryEventBus";
+import { ConsoleNotifier } from "@adapters/out/notification/ConsoleNotifier";
+import { FakePaymentGateway } from "@adapters/out/payment/FakePaymentGateway";
+import { InMemoryScreeningRepository } from "@adapters/out/persistence/InMemoryScreeningRepository";
+import { SystemClock } from "@adapters/out/system/SystemClock";
+import { UuidGenerator } from "@adapters/out/system/UuidGenerator";
+import { createRouter, domainErrorHandler } from "@adapters/in/http/routes";
+import { NotifyCustomer } from "@application/handlers/NotifyCustomer";
+import { Clock } from "@application/ports/out/Clock";
+import { IdGenerator } from "@application/ports/out/IdGenerator";
+import { Notifier } from "@application/ports/out/Notifier";
+import { PaymentGateway } from "@application/ports/out/PaymentGateway";
+import { ScreeningRepository } from "@application/ports/out/ScreeningRepository";
+import { BookSeatsService } from "@application/usecases/BookSeatsService";
+import { CancelBookingService } from "@application/usecases/CancelBookingService";
+import { ListMyBookingsService } from "@application/usecases/ListMyBookingsService";
+import { ListUpcomingScreeningsService } from "@application/usecases/ListUpcomingScreeningsService";
+import { Screening } from "@domain/booking/Screening";
+import { SeatCount } from "@domain/booking/SeatCount";
+import { Email } from "@domain/shared/Email";
+import { Money } from "@domain/shared/Money";
 
-const app = express();
-app.use(express.json());
-
-// Adapters (ports out)
-const jsonDatabase = new JsonDatabase();
-const screeningRepository = new ScreeningRepository(jsonDatabase);
-const bookingRepository = new BookingRepository(jsonDatabase);
-const clock = new SystemClock();
-const idGenerator = new TimestampIdGenerator();
-const notifier = new ConsoleNotifier();
-const paymentGateway = new FakePaymentGateway();
-
-// Use cases (ports in)
-const bookSeatsUsecase = new BookSeatsUseCase(
-  bookingRepository,
-  screeningRepository,
-  paymentGateway,
-  notifier,
-  clock,
-  idGenerator,
-);
-const cancelBookingService = new CancelBookingUseCase(bookingRepository, screeningRepository, notifier, clock);
-const listScreeningsService = new ListScreeningsUseCase(bookingRepository, screeningRepository, clock);
-const listUserBookingsService = new ListUserBookingsUseCase(bookingRepository, screeningRepository);
-
-const routesController = new RoutesController(
-  bookSeatsUsecase,
-  cancelBookingService,
-  listScreeningsService,
-  listUserBookingsService,
-);
-
-app.use(routesController.router);
-
-const PORT = process.env.PORT || 3000;
-if (require.main === module) {
-  app.listen(PORT, () => console.log(`CinéResa legacy sur http://localhost:${PORT}`));
+export interface Adapters {
+  screenings: ScreeningRepository;
+  payment: PaymentGateway;
+  notifier: Notifier;
+  clock: Clock;
+  ids?: IdGenerator;
 }
 
-export default app;
+export function buildApp(adapters: Adapters): Express {
+  const { screenings, payment, notifier, clock, ids = new UuidGenerator() } = adapters;
+
+  const eventBus = new InMemoryEventBus();
+  const notifyCustomer = new NotifyCustomer(notifier);
+  eventBus.subscribe("BookingConfirmed", (event) => notifyCustomer.onBookingConfirmed(event));
+  eventBus.subscribe("BookingCancelled", (event) => notifyCustomer.onBookingCancelled(event));
+
+  const app = express();
+  app.use(express.json());
+  app.use(
+    createRouter({
+      bookSeats: new BookSeatsService(screenings, payment, eventBus, clock, ids),
+      cancelBooking: new CancelBookingService(screenings, eventBus, clock),
+      listUpcomingScreenings: new ListUpcomingScreeningsService(screenings, clock),
+      listMyBookings: new ListMyBookingsService(screenings),
+    }),
+  );
+  app.use(domainErrorHandler);
+  return app;
+}
+
+// Mêmes données de départ que scripts/seed.ts.
+function initialScreenings(now: Date): Screening[] {
+  const inHours = (hours: number) => new Date(now.getTime() + hours * 3_600_000);
+
+  const preview = Screening.schedule({ id: "s3", movie: "Avant-première surprise", room: "Salle 3", startsAt: inHours(1), capacity: 10, unitPrice: Money.cents(900) });
+  preview.book({ bookingId: "b1", email: new Email("alice@example.com"), seats: new SeatCount(6), tariff: "NORMAL", now });
+
+  return [
+    Screening.schedule({ id: "s1", movie: "Dune: Part Three", room: "Salle 1", startsAt: inHours(26), capacity: 120, unitPrice: Money.cents(1150) }),
+    Screening.schedule({ id: "s2", movie: "Le Comte de Monte-Cristo", room: "Salle 2", startsAt: inHours(50), capacity: 80, unitPrice: Money.cents(1050) }),
+    preview,
+  ];
+}
+
+export function defaultAdapters(): Adapters {
+  const clock = new SystemClock();
+  return {
+    screenings: new InMemoryScreeningRepository(initialScreenings(clock.now())),
+    payment: new FakePaymentGateway(),
+    notifier: new ConsoleNotifier(),
+    clock,
+  };
+}

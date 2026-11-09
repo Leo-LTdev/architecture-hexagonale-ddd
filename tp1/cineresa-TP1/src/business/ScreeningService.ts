@@ -1,8 +1,16 @@
 import BookingRepository from "../data/BookingRepository";
 import ScreeningRepository from "../data/ScreeningRepository";
-import Utils from "../utils/Utils";
-import { BookingStatus, Screening } from "../models/types/types";
+import { Booking, BookingStatus, Screening } from "../models/types/types";
 import { BookingRepositoryInterface, ScreeningRepositoryInterface, ScreeningServiceInterface, UtilsInterface } from "../interfaces/Interfaces";
+
+export function remainingSeats(screening: Screening, bookings: Booking[]): number {
+  //Get bookings for this screening and status confirmed
+  const taken = bookings
+    .filter((b) => b.screeningId == screening.id && b.status == BookingStatus.CONFIRMED)
+    .reduce((sum, b) => sum + b.seats, 0);
+
+  return screening.capacity - taken;
+}
 
 class ScreeningService implements ScreeningServiceInterface {
   private utils: UtilsInterface;
@@ -28,10 +36,7 @@ class ScreeningService implements ScreeningServiceInterface {
     return screenings.map((s) => {
       //Get bookings for this screening and status confirmed
       const taken = bookings
-        .filter((b) => b.screeningId == s.id && b.status == BookingStatus.CONFIRMED)
-        .reduce((sum, b) => sum + b.seats, 0);
-
-      s.remaining = s.capacity - taken;
+      s.remaining = remainingSeats(s, bookings);
       return s;
     });
   }

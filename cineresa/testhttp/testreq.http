@@ -1,23 +1,32 @@
 @baseUrl = http://localhost:3000
 @email = test@example.com
 
-### 1. Récupérer toutes les séances (Screenings)
 GET {{baseUrl}}/screenings
 Accept: application/json
 
-### 2. Créer une nouvelle réservation pour une séance (ex: ID 1)
+# @name book
 POST {{baseUrl}}/screenings/s2/bookings
 Content-Type: application/json
 
 {
   "email": "{{email}}",
-  "seats": 3,
+  "seats": 4,
   "tariff": "STUDENT"
 }
 
-### 3. Récupérer les réservations d'un utilisateur par son email
 GET {{baseUrl}}/bookings?email={{email}}
 Accept: application/json
 
-### 4. Annuler/Supprimer une réservation spécifique
-DELETE {{baseUrl}}/bookings/b123456789
+DELETE {{baseUrl}}/bookings/{{book.response.body.id}}
+
+POST {{baseUrl}}/screenings/zz/bookings
+Content-Type: application/json
+
+{ "email": "{{email}}", "seats": 1 }
+
+POST {{baseUrl}}/screenings/s1/bookings
+Content-Type: application/json
+
+{ "email": "{{email}}", "seats": 7 }
+
+DELETE {{baseUrl}}/bookings/b1

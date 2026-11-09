@@ -1,18 +1,47 @@
-# CinéResa — version legacy
+# CinéResa
 
-API de réservation de places de cinéma, volontairement écrite « à l'ancienne » : tout est dans `src/server.ts`.
+API de réservation de places de cinéma, refactorée d'un code legacy monolithique vers une **architecture hexagonale** et un modèle **DDD tactique**. Projet du module DDD — Ynov B3.
+
+## Membres du projet 
+
+| Membre | GitHub |
+| --- | --- |
+| Léo | [@Leo-LTdev](https://github.com/Leo-LTdev) |
+| Corentin H. | [@corentin-cpp](https://github.com/corentin-cpp) |
+
+## Démarrage
 
 ```bash
 npm install
-npm run seed   # régénère data/db.json avec des séances dans les prochains jours
-npm start      # http://localhost:3000
+npm run seed         # (re)génère data/db.json
+npm start            # persistance en mémoire — http://localhost:3000
+npm test             # tests unitaires, HTTP, architecture
+npm run typecheck
 ```
 
-| Méthode | Route | Body |
-|---|---|---|
-| GET | `/screenings` | — |
-| POST | `/screenings/:id/bookings` | `{ "email": "a@b.fr", "seats": 2, "tariff": "NORMAL" }` (`"STUDENT"` pour le tarif étudiant) |
-| DELETE | `/bookings/:id` | — |
-| GET | `/bookings?email=a@b.fr` | — |
+## Arborescence
 
-Les prix sont en centimes. Le paiement est simulé et échoue aléatoirement 1 fois sur 20.
+```
+src/
+├── domain/
+│   ├── shared/      DomainError, DomainEvent, Money, Email
+│   └── booking/     Screening (racine), Booking, SeatCount, Tariff, PricingPolicy, events
+├── application/
+│   ├── ports/in/    BookSeats, CancelBooking, ListUpcomingScreenings, ListMyBookings
+│   ├── ports/out/   ScreeningRepository, PaymentGateway, EventPublisher, Notifier, Clock, IdGenerator
+│   ├── usecases/    un service par port entrant
+│   ├── handlers/    NotifyCustomer (e-mails en réaction aux événements)
+│   └── dto/         commande et vues renvoyées (les objets du domaine ne sortent pas)
+├── adapters/
+│   ├── in/http/     routes Express + traduction DomainError -> statut HTTP
+│   └── out/         persistence (mémoire), payment, events, notification, system
+├── container.ts     composition root : buildApp(adapters), defaultAdapters()
+└── main.ts          démarre le serveur
+test/                tests Vitest (aucun ne démarre de serveur réel ni n'écrit dans data/db.json)
+docs/                DAT, diagrammes PlantUML, ADR
+```
+
+## Documentation
+
+- [Document d'architecture technique](docs/DAT.md)
+- [ADR-001 — Booking dans l'agrégat Screening](docs/adr/001-booking-dans-agregat-screening.md)
